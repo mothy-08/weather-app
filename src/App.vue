@@ -2,6 +2,7 @@
 import ForecastDayCard from "./components/ForecastDayCard.vue";
 import WeatherMetricCard from "./components/WeatherMetricCard.vue";
 import HourlyForecastRow from "./components/HourlyForecastRow.vue";
+import TheHeader from "./components/TheHeader.vue";
 
 const placeholderStatus = [
   {
@@ -112,17 +113,7 @@ const placeholderHourlyForecast = [
 </script>
 
 <template>
-  <header class="flex justify-between px-16 py-8">
-    <div>
-      <img src="/images/logo.svg" alt="Weather app logo" />
-    </div>
-    <!-- dropdown -->
-    <div>
-      <!-- settings icon -->
-      <span>Units</span>
-      <!-- arrow down icon  -->
-    </div>
-  </header>
+  <TheHeader />
 
   <main class="flex flex-col items-center justify-center gap-8">
     <h1 class="font-grotesque text-5xl">How's the sky looking today?</h1>
