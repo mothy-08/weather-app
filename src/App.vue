@@ -1,81 +1,120 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import ForecastDayCard from './components/ForecastDayCard.vue'
-import WeatherMetricCard from './components/WeatherMetricCard.vue'
+import ForecastDayCard from "./components/ForecastDayCard.vue";
+import WeatherMetricCard from "./components/WeatherMetricCard.vue";
+import HourlyForecastRow from "./components/HourlyForecastRow.vue";
 
-const placeholderStatus = ref([
+const placeholderStatus = [
   {
-    type: 'Feels like',
+    type: "feelsLike",
     value: 18,
-    unit: '°',
   },
   {
-    type: 'Humidity',
+    type: "humidity",
     value: 46,
-    unit: '%',
   },
   {
-    type: 'Wind',
+    type: "wind",
     value: 14,
-    unit: ' km/h',
   },
   {
-    type: 'Precipitation',
+    type: "precipitation",
     value: 0,
-    unit: ' mm',
   },
-])
+] as const;
 
-const placeholderForecasts = ref([
+const placeholderDailyForecasts = [
   {
-    dayLabel: 'Tue',
-    conditionFileName: 'icon-drizzle.webp',
+    date: "2026-02-03",
+    conditionFileName: "icon-drizzle.webp",
     tempHigh: 20,
     tempLow: 14,
   },
   {
-    dayLabel: 'Wed',
-    conditionFileName: 'icon-rain.webp',
+    date: "2026-02-04",
+    conditionFileName: "icon-rain.webp",
     tempHigh: 21,
     tempLow: 15,
   },
   {
-    dayLabel: 'Thu',
-    conditionFileName: 'icon-sunny.webp',
+    date: "2026-02-05",
+    conditionFileName: "icon-sunny.webp",
     tempHigh: 24,
     tempLow: 14,
   },
   {
-    dayLabel: 'Fri',
-    conditionFileName: 'icon-partly-cloudy.webp',
+    date: "2026-02-06",
+    conditionFileName: "icon-partly-cloudy.webp",
     tempHigh: 25,
     tempLow: 13,
   },
   {
-    dayLabel: 'Sat',
-    conditionFileName: 'icon-storm.webp',
+    date: "2026-02-07",
+    conditionFileName: "icon-storm.webp",
     tempHigh: 21,
     tempLow: 15,
   },
   {
-    dayLabel: 'Sun',
-    conditionFileName: 'icon-snow.webp',
+    date: "2026-02-08",
+    conditionFileName: "icon-snow.webp",
     tempHigh: 26,
     tempLow: 16,
   },
   {
-    dayLabel: 'Mon',
-    conditionFileName: 'icon-fog.webp',
+    date: "2026-02-09",
+    conditionFileName: "icon-fog.webp",
     tempHigh: 24,
     tempLow: 15,
   },
-])
+];
+
+const placeholderHourlyForecast = [
+  {
+    weatherConditionIconPath: "icon-overcast.webp",
+    date: "2026-02-09T03:00:00",
+    temp: 20,
+  },
+  {
+    weatherConditionIconPath: "icon-partly-cloudy.webp",
+    date: "2026-02-09T04:00:00",
+    temp: 20,
+  },
+  {
+    weatherConditionIconPath: "icon-sunny.webp",
+    date: "2026-02-09T05:00:00",
+    temp: 20,
+  },
+  {
+    weatherConditionIconPath: "icon-overcast.webp",
+    date: "2026-02-09T06:00:00",
+    temp: 19,
+  },
+  {
+    weatherConditionIconPath: "icon-snow.webp",
+    date: "2026-02-09T07:00:00",
+    temp: 18,
+  },
+  {
+    weatherConditionIconPath: "icon-fog.webp",
+    date: "2026-02-09T08:00:00",
+    temp: 18,
+  },
+  {
+    weatherConditionIconPath: "icon-snow.webp",
+    date: "2026-02-09T09:00:00",
+    temp: 17,
+  },
+  {
+    weatherConditionIconPath: "icon-overcast.webp",
+    date: "2026-02-09T10:00:00",
+    temp: 17,
+  },
+];
 </script>
 
 <template>
   <header class="flex justify-between px-16 py-8">
     <div>
-      <img src="./assets/images/logo.svg" alt="Weather app logo" />
+      <img src="/images/logo.svg" alt="Weather app logo" />
     </div>
     <!-- dropdown -->
     <div>
@@ -102,15 +141,8 @@ const placeholderForecasts = ref([
     </div>
 
     <!-- main card -->
-    <section>
-      <div class="relative">
-        <img
-          class="absolute top-0 left-0"
-          src="./assets/images/bg-today-large.svg"
-          alt="Purple background displaying weather today"
-        />
-        <p>hello there</p>
-      </div>
+    <section class="bg-[url(/images/bg-today-large.svg)] bg-cover bg-center bg-no-repeat">
+      <p>hello there</p>
     </section>
 
     <!-- status cards -->
@@ -120,7 +152,6 @@ const placeholderForecasts = ref([
         :key="stat.type"
         :type="stat.type"
         :value="stat.value"
-        :unit="stat.unit"
       />
     </section>
 
@@ -128,12 +159,29 @@ const placeholderForecasts = ref([
       <h2>Daily Forecast</h2>
       <div class="flex gap-4">
         <ForecastDayCard
-          v-for="forecast in placeholderForecasts"
-          :key="forecast.dayLabel"
-          :dayLabel="forecast.dayLabel"
-          :conditionFileName="forecast.conditionFileName"
+          v-for="forecast in placeholderDailyForecasts"
+          :key="forecast.date"
+          :date="new Date(forecast.date)"
+          :weatherConditionIconPath="forecast.conditionFileName"
           :tempHigh="forecast.tempHigh"
           :tempLow="forecast.tempLow"
+        />
+      </div>
+    </section>
+
+    <!-- hourly forecast -->
+    <section>
+      <div class="flex flex-col gap-3">
+        <div>
+          <h2>Hourly Forecast</h2>
+          <!-- dropdown here -->
+        </div>
+        <HourlyForecastRow
+          v-for="hourlyForecast in placeholderHourlyForecast"
+          :key="hourlyForecast.date"
+          :date="new Date(hourlyForecast.date)"
+          :weatherConditionIconPath="hourlyForecast.weatherConditionIconPath"
+          :temp="hourlyForecast.temp"
         />
       </div>
     </section>

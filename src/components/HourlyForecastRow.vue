@@ -1,10 +1,14 @@
 <script setup lang="ts">
-export type ForecastRow = {
-  iconPath: string
-  time: Date
-  temp: number
-}
-defineProps<ForecastRow>()
+const props = defineProps<{
+  weatherConditionIconPath: string;
+  date: Date;
+  temp: number;
+}>();
+
+const hour = props.date.toLocaleTimeString("en-US", {
+  hour: "numeric",
+  hour12: true,
+});
 </script>
 
 <template>
@@ -12,14 +16,13 @@ defineProps<ForecastRow>()
     class="flex items-center justify-between rounded-lg border border-neutral-500 bg-neutral-600"
   >
     <div>
-      <img :src="`/images/${iconPath}`" alt="" width="32px" />
+      <img
+        :src="`/images/${weatherConditionIconPath}`"
+        alt="Current weather condition icon"
+        width="32px"
+      />
       <span>
-        {{
-          time.toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            hour12: true,
-          })
-        }}
+        {{ hour }}
       </span>
     </div>
     <span> {{ temp }}° </span>
