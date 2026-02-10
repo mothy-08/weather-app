@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import ForecastDayCard from "./components/ForecastDayCard.vue";
-import WeatherMetricCard from "./components/WeatherMetricCard.vue";
-import HourlyForecastRow from "./components/HourlyForecastRow.vue";
 import TheHeader from "./components/TheHeader.vue";
+import WeatherHighlightCard from "./components/WeatherHighlightCard.vue";
+import DailyForecastItem from "./components/DailyForecastItem.vue";
+import HourlyForecastItem from "./components/HourlyForecastItem.vue";
+import CurrentWeatherCard from "./components/CurrentWeatherCard.vue";
 
 const placeholderStatus = [
   {
@@ -132,13 +133,21 @@ const placeholderHourlyForecast = [
     </div>
 
     <!-- main card -->
-    <section class="bg-[url(/images/bg-today-large.svg)] bg-cover bg-center bg-no-repeat">
-      <p>hello there</p>
-    </section>
+    <!-- <section class="bg-[url(/images/bg-today-large.svg)] bg-cover bg-center bg-no-repeat"> -->
+    <!--   <p>hello there</p> -->
+    <!-- </section> -->
+    <CurrentWeatherCard
+      :city="'Batangas'"
+      :country="'Philippines'"
+      :currentTemp="20"
+      :weatherConditionIconPath="'/images/icon-sunny.webp'"
+      :weatherDescription="'Sunny Weather'"
+      :date="new Date('2026-02-10T03:00:00')"
+    />
 
     <!-- status cards -->
     <section class="flex gap-6">
-      <WeatherMetricCard
+      <WeatherHighlightCard
         v-for="stat in placeholderStatus"
         :key="stat.type"
         :type="stat.type"
@@ -149,7 +158,7 @@ const placeholderHourlyForecast = [
     <section class="grid gap-2">
       <h2>Daily Forecast</h2>
       <div class="flex gap-4">
-        <ForecastDayCard
+        <DailyForecastItem
           v-for="forecast in placeholderDailyForecasts"
           :key="forecast.date"
           :date="new Date(forecast.date)"
@@ -167,7 +176,7 @@ const placeholderHourlyForecast = [
           <h2>Hourly Forecast</h2>
           <!-- dropdown here -->
         </div>
-        <HourlyForecastRow
+        <HourlyForecastItem
           v-for="hourlyForecast in placeholderHourlyForecast"
           :key="hourlyForecast.date"
           :date="new Date(hourlyForecast.date)"

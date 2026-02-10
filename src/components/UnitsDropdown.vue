@@ -34,8 +34,8 @@ function changeMeasurementSystem() {
     </DropdownMenuTrigger>
     <DropdownMenuContent class="w-56" align="end">
       <DropdownMenuItem @click="changeMeasurementSystem">
-        Switch to {{ previousMeasurementSystem }}</DropdownMenuItem
-      >
+        Switch to {{ previousMeasurementSystem }}
+      </DropdownMenuItem>
       <DropdownMenuLabel>Temperature</DropdownMenuLabel>
       <DropdownMenuGroup>
         <DropdownMenuItem disabled> Celsius (°C) </DropdownMenuItem>

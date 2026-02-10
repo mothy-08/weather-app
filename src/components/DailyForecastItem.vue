@@ -1,19 +1,19 @@
 <script setup lang="ts">
-const props = defineProps<{
+const { date } = defineProps<{
   date: Date;
   weatherConditionIconPath: string;
   tempHigh: number;
   tempLow: number;
 }>();
 
-const day = new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(props.date);
+const weekdayShort = new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(date);
 </script>
 
 <template>
   <div
     class="flex min-w-24 flex-col items-center gap-2 rounded-lg border border-neutral-700 bg-neutral-800 px-2 py-3"
   >
-    <div>{{ day }}</div>
+    <div>{{ weekdayShort }}</div>
     <div>
       <img
         :src="`/images/${weatherConditionIconPath}`"
