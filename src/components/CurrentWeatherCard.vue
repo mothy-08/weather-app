@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import DegreeSymbol from "./DegreeSymbol.vue";
 
-// 1. Assign props to a variable. Do NOT destructure unless using Reactivity Transform.
+// 1. Destructure date to a variable.
 const { date } = defineProps<{
   city: string;
   country: string;
@@ -12,16 +12,14 @@ const { date } = defineProps<{
   currentTemp: number;
 }>();
 
-// 3. Make the date formatting reactive.
-// If props.date changes, this automatically recalculates.
-const formattedDate = computed(() => {
-  return new Intl.DateTimeFormat("en-US", {
-    weekday: "long",
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(date);
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  weekday: "long",
+  month: "short",
+  day: "numeric",
+  year: "numeric",
 });
+
+const formattedDate = computed(() => dateFormatter.format(date));
 
 // 4. ISO string also needs to be computed or accessed directly in template
 const isoDate = computed(() => date.toISOString());

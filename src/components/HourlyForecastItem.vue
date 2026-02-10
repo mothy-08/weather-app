@@ -1,30 +1,31 @@
 <script setup lang="ts">
-const props = defineProps<{
+import { computed } from "vue";
+import DegreeSymbol from "./DegreeSymbol.vue";
+
+const { date } = defineProps<{
   weatherConditionIconPath: string;
+  weatherConditionDescription: string;
   date: Date;
   temp: number;
 }>();
 
-const hour = props.date.toLocaleTimeString("en-US", {
-  hour: "numeric",
-  hour12: true,
-});
+const hour = computed(() => date.toLocaleTimeString("en-US", { hour: "numeric", hour12: true }));
+
+const isoDate = computed(() => date.toISOString());
 </script>
 
 <template>
-  <div
-    class="flex items-center justify-between rounded-lg border border-neutral-500 bg-neutral-600"
-  >
-    <div>
+  <li class="flex items-center justify-between rounded-lg border border-neutral-500 bg-neutral-600">
+    <div class="flex items-center gap-2">
       <img
-        :src="`/images/${weatherConditionIconPath}`"
-        alt="Current weather condition icon"
-        width="32px"
+        :src="weatherConditionIconPath"
+        :alt="weatherConditionDescription"
+        width="32"
+        height="32"
       />
-      <span>
-        {{ hour }}
-      </span>
+      <time :datetime="isoDate"> {{ hour }} </time>
     </div>
-    <span> {{ temp }}° </span>
-  </div>
+
+    <data :value="temp"> {{ temp }}<DegreeSymbol /> </data>
+  </li>
 </template>
