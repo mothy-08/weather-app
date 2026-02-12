@@ -4,8 +4,8 @@ import { computed } from "vue";
 const WEATHER_METRIC = {
   feelsLike: { label: "Feels Like", unit: "°" },
   humidity: { label: "Humidity", unit: "%" },
-  wind: { label: "Wind", unit: { metric: "km/h", imperial: "mph" } },
-  precipitation: { label: "Precipitation", unit: { metric: "mm", imperial: "in" } },
+  wind: { label: "Wind", unit: { metric: " km/h", imperial: " mph" } },
+  precipitation: { label: "Precipitation", unit: { metric: " mm", imperial: " in" } },
 };
 
 const props = defineProps<{

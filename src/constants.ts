@@ -1,0 +1,61 @@
+const ICONS_PATH = "/images/";
+
+export const WEATHER_ICONS = {
+  SUNNY: `${ICONS_PATH}icon-sunny.webp`,
+  PARTLY_CLOUDY: `${ICONS_PATH}icon-partly-cloudy.webp`,
+  OVERCAST: `${ICONS_PATH}icon-overcast.webp`,
+  FOG: `${ICONS_PATH}icon-fog.webp`,
+  DRIZZLE: `${ICONS_PATH}icon-drizzle.webp`,
+  RAIN: `${ICONS_PATH}icon-rain.webp`,
+  SNOW: `${ICONS_PATH}icon-snow.webp`,
+  STORM: `${ICONS_PATH}icon-storm.webp`,
+};
+
+export const WEATHER_DESCRIPTION_MAP = new Map([
+  [WEATHER_ICONS.SUNNY, "Sunny weather"],
+  [WEATHER_ICONS.PARTLY_CLOUDY, "Partly cloudy weather"],
+  [WEATHER_ICONS.OVERCAST, "Overcast sky"],
+  [WEATHER_ICONS.FOG, "Foggy conditions"],
+  [WEATHER_ICONS.DRIZZLE, "Light drizzle"],
+  [WEATHER_ICONS.RAIN, "Rainy weather"],
+  [WEATHER_ICONS.SNOW, "Snowy weather"],
+  [WEATHER_ICONS.STORM, "Thunderstorm conditions"],
+]);
+
+export const WEATHER_CODE_MAP = new Map([
+  [0, WEATHER_ICONS.SUNNY],
+  [1, WEATHER_ICONS.SUNNY],
+
+  [2, WEATHER_ICONS.PARTLY_CLOUDY],
+
+  [3, WEATHER_ICONS.OVERCAST],
+
+  [45, WEATHER_ICONS.FOG],
+  [48, WEATHER_ICONS.FOG],
+
+  [51, WEATHER_ICONS.DRIZZLE],
+  [53, WEATHER_ICONS.DRIZZLE],
+  [55, WEATHER_ICONS.DRIZZLE],
+  [56, WEATHER_ICONS.DRIZZLE],
+  [57, WEATHER_ICONS.DRIZZLE],
+
+  [61, WEATHER_ICONS.RAIN],
+  [63, WEATHER_ICONS.RAIN],
+  [65, WEATHER_ICONS.RAIN],
+  [66, WEATHER_ICONS.RAIN],
+  [67, WEATHER_ICONS.RAIN],
+  [80, WEATHER_ICONS.RAIN],
+  [81, WEATHER_ICONS.RAIN],
+  [82, WEATHER_ICONS.RAIN],
+
+  [71, WEATHER_ICONS.SNOW],
+  [73, WEATHER_ICONS.SNOW],
+  [75, WEATHER_ICONS.SNOW],
+  [77, WEATHER_ICONS.SNOW],
+  [85, WEATHER_ICONS.SNOW],
+  [86, WEATHER_ICONS.SNOW],
+
+  [95, WEATHER_ICONS.STORM],
+  [96, WEATHER_ICONS.STORM],
+  [99, WEATHER_ICONS.STORM],
+]);

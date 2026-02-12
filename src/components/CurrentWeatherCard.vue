@@ -2,13 +2,12 @@
 import { computed } from "vue";
 import DegreeSymbol from "./DegreeSymbol.vue";
 
-// 1. Destructure date to a variable.
 const { date } = defineProps<{
   city: string;
   country: string;
   date: Date;
   weatherConditionIconPath: string;
-  weatherDescription: string; // 2. Added this. Essential for accessibility.
+  weatherDescription: string;
   currentTemp: number;
 }>();
 
@@ -21,13 +20,12 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
 
 const formattedDate = computed(() => dateFormatter.format(date));
 
-// 4. ISO string also needs to be computed or accessed directly in template
 const isoDate = computed(() => date.toISOString());
 </script>
 
 <template>
   <article
-    class="flex min-w-1/2 items-center justify-between rounded-2xl bg-[url(/images/bg-today-large.svg)] bg-cover bg-center bg-no-repeat px-5 py-20"
+    class="col-span-2 row-span-1 flex min-w-1/2 items-center justify-between rounded-2xl bg-[url(/images/bg-today-large.svg)] bg-cover bg-center bg-no-repeat px-5 py-20"
   >
     <div class="flex flex-col gap-2">
       <h2 class="text-2xl font-bold">{{ city }}, {{ country }}</h2>

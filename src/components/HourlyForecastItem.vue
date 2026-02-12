@@ -15,7 +15,9 @@ const isoDate = computed(() => date.toISOString());
 </script>
 
 <template>
-  <li class="flex items-center justify-between rounded-lg border border-neutral-500 bg-neutral-600">
+  <li
+    class="flex items-center justify-between rounded-lg border border-neutral-600 bg-neutral-700 p-2"
+  >
     <div class="flex items-center gap-2">
       <img
         :src="weatherConditionIconPath"
@@ -26,6 +28,8 @@ const isoDate = computed(() => date.toISOString());
       <time :datetime="isoDate"> {{ hour }} </time>
     </div>
 
-    <data :value="temp"> {{ temp }}<DegreeSymbol /> </data>
+    <data :value="temp" class="text-sm font-semibold text-neutral-200">
+      {{ temp }}<DegreeSymbol />
+    </data>
   </li>
 </template>
