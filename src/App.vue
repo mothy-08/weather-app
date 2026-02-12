@@ -4,10 +4,18 @@ import SearchBar from "./components/SearchBar.vue";
 import CurrentWeatherCard from "./components/CurrentWeatherCard.vue";
 import { useWeather } from "./useWeather";
 import { computed } from "vue";
-import { WEATHER_CODE_MAP, WEATHER_DESCRIPTION_MAP } from "./constants";
 import WeatherHighlightCard from "./components/WeatherHighlightCard.vue";
 import DailyForecastItem from "./components/DailyForecastItem.vue";
 import HourlyForecastItem from "./components/HourlyForecastItem.vue";
+import {
+  formatDateWithWeekday,
+  formatShortWeekdayOnly,
+  formatTo12Hour,
+  getIsoDate,
+  getIsoDateOnly,
+  getWeatherMeta,
+  roundValue,
+} from "./lib/utils";
 
 const BATANGAS_COORDINATES = {
   latitude: 13.7567,
@@ -16,212 +24,111 @@ const BATANGAS_COORDINATES = {
 
 const { data, error } = useWeather(BATANGAS_COORDINATES);
 
-const currentTempRounded = computed(() => {
-  const currentTemp = data.value?.current.temperature_2m;
+const dailyForecasts = computed(() => {
+  const dailies = data.value?.daily;
 
-  if (currentTemp) {
-    return Math.round(currentTemp);
+  if (!dailies) return null;
+
+  const {
+    time,
+    weather_code: code,
+    temperature_2m_max: tempHigh,
+    temperature_2m_min: tempLow,
+  } = dailies;
+
+  if (!time || !code || !tempHigh || !tempLow) return null;
+
+  const arr = [];
+
+  for (let i = 0; i < Math.min(7, time.length, code.length, tempHigh.length, tempLow.length); i++) {
+    const [t, c, th, tl] = [time[i], code[i], tempHigh[i], tempLow[i]];
+
+    if (t == undefined || c == undefined || th == undefined || tl == undefined) return [];
+
+    arr.push({
+      isoDateOnly: getIsoDateOnly(t),
+      shortWeekdayOnly: formatShortWeekdayOnly(t),
+      weatherConditionIconPath: getWeatherMeta(c).src,
+      weatherIconDescription: getWeatherMeta(c).alt,
+      tempHigh: roundValue(th),
+      tempLow: roundValue(tl),
+    });
   }
 
-  return undefined;
+  return arr;
 });
 
-const weatherConditionIconPath = computed((): string => {
-  const code = data.value?.current.weather_code;
-
-  if (code) {
-    return WEATHER_CODE_MAP.get(code) ?? "";
-  }
-
-  return "";
-});
-
-const weatherDescription = computed((): string => {
-  if (weatherConditionIconPath.value)
-    return WEATHER_DESCRIPTION_MAP.get(weatherConditionIconPath.value) ?? "";
-  return "";
+const currentWeatherDetails = computed(() => {
+  const currentValues = data.value?.current;
+  if (currentValues == undefined) return null;
+  const { temperature_2m: currentTemp, weather_code: code, time } = currentValues;
+  return {
+    city: "Batangas",
+    country: "Philippines",
+    formattedDateWithWeekday: formatDateWithWeekday(time),
+    isoDate: getIsoDate(time),
+    currentTemp: roundValue(currentTemp),
+    weatherConditionIconPath: getWeatherMeta(code).src,
+    weatherIconDescription: getWeatherMeta(code).alt,
+  };
 });
 
 const weatherHighlights = computed(() => {
+  const currentValues = data.value?.current;
+  if (currentValues == undefined) return null;
+
+  const {
+    apparent_temperature: temp,
+    relative_humidity_2m: humidity,
+    wind_speed_10m: wind,
+    precipitation,
+  } = currentValues;
+
   return [
-    { type: "feelsLike", value: Math.round(data.value?.current.apparent_temperature ?? NaN) },
-    { type: "humidity", value: Math.round(data.value?.current.relative_humidity_2m ?? NaN) },
-    { type: "wind", value: Math.round(data.value?.current.wind_speed_10m ?? NaN) },
-    { type: "precipitation", value: Math.round(data.value?.current.precipitation ?? NaN) },
+    {
+      type: "feelsLike",
+      value: roundValue(temp),
+    },
+    {
+      type: "humidity",
+      value: roundValue(humidity),
+    },
+    {
+      type: "wind",
+      value: roundValue(wind),
+    },
+    {
+      type: "precipitation",
+      value: roundValue(precipitation),
+    },
   ] as const;
 });
 
-const dailyForecasts = computed(() => {
-  return [
-    {
-      date: data.value?.daily.time[0],
-      weatherConditionIconPath: data.value?.daily.weather_code
-        ? WEATHER_CODE_MAP.get(data.value?.daily.weather_code[0] ?? NaN)
-        : "",
-
-      tempHigh: data.value?.daily.temperature_2m_max
-        ? Math.round(data.value?.daily.temperature_2m_max[0] ?? NaN)
-        : NaN,
-      tempLow: data.value?.daily.temperature_2m_min
-        ? Math.round(data.value?.daily.temperature_2m_min[0] ?? NaN)
-        : NaN,
-    },
-    {
-      date: data.value?.daily.time[1],
-      weatherConditionIconPath: data.value?.daily.weather_code
-        ? WEATHER_CODE_MAP.get(data.value?.daily.weather_code[1] ?? NaN)
-        : "",
-
-      tempHigh: data.value?.daily.temperature_2m_max
-        ? Math.round(data.value?.daily.temperature_2m_max[1] ?? NaN)
-        : NaN,
-      tempLow: data.value?.daily.temperature_2m_min
-        ? Math.round(data.value?.daily.temperature_2m_min[1] ?? NaN)
-        : NaN,
-    },
-    {
-      date: data.value?.daily.time[2],
-      weatherConditionIconPath: data.value?.daily.weather_code
-        ? WEATHER_CODE_MAP.get(data.value?.daily.weather_code[2] ?? NaN)
-        : "",
-
-      tempHigh: data.value?.daily.temperature_2m_max
-        ? Math.round(data.value?.daily.temperature_2m_max[2] ?? NaN)
-        : NaN,
-      tempLow: data.value?.daily.temperature_2m_min
-        ? Math.round(data.value?.daily.temperature_2m_min[2] ?? NaN)
-        : NaN,
-    },
-    {
-      date: data.value?.daily.time[3],
-      weatherConditionIconPath: data.value?.daily.weather_code
-        ? WEATHER_CODE_MAP.get(data.value?.daily.weather_code[3] ?? NaN)
-        : "",
-
-      tempHigh: data.value?.daily.temperature_2m_max
-        ? Math.round(data.value?.daily.temperature_2m_max[3] ?? NaN)
-        : NaN,
-      tempLow: data.value?.daily.temperature_2m_min
-        ? Math.round(data.value?.daily.temperature_2m_min[3] ?? NaN)
-        : NaN,
-    },
-    {
-      date: data.value?.daily.time[4],
-      weatherConditionIconPath: data.value?.daily.weather_code
-        ? WEATHER_CODE_MAP.get(data.value?.daily.weather_code[4] ?? NaN)
-        : "",
-
-      tempHigh: data.value?.daily.temperature_2m_max
-        ? Math.round(data.value?.daily.temperature_2m_max[4] ?? NaN)
-        : NaN,
-      tempLow: data.value?.daily.temperature_2m_min
-        ? Math.round(data.value?.daily.temperature_2m_min[4] ?? NaN)
-        : NaN,
-    },
-    {
-      date: data.value?.daily.time[5],
-      weatherConditionIconPath: data.value?.daily.weather_code
-        ? WEATHER_CODE_MAP.get(data.value?.daily.weather_code[5] ?? NaN)
-        : "",
-
-      tempHigh: data.value?.daily.temperature_2m_max
-        ? Math.round(data.value?.daily.temperature_2m_max[5] ?? NaN)
-        : NaN,
-      tempLow: data.value?.daily.temperature_2m_min
-        ? Math.round(data.value?.daily.temperature_2m_min[5] ?? NaN)
-        : NaN,
-    },
-    {
-      date: data.value?.daily.time[6],
-      weatherConditionIconPath: data.value?.daily.weather_code
-        ? WEATHER_CODE_MAP.get(data.value?.daily.weather_code[6] ?? NaN)
-        : "",
-
-      tempHigh: data.value?.daily.temperature_2m_max
-        ? Math.round(data.value?.daily.temperature_2m_max[6] ?? NaN)
-        : NaN,
-      tempLow: data.value?.daily.temperature_2m_min
-        ? Math.round(data.value?.daily.temperature_2m_min[6] ?? NaN)
-        : NaN,
-    },
-  ];
-});
-
 const hourlyForecasts = computed(() => {
-  return [
-    {
-      weatherConditionIconPath: data.value?.hourly.weather_code
-        ? WEATHER_CODE_MAP.get(data.value.hourly.weather_code[0] ?? NaN)
-        : "",
-      date: data.value?.hourly.time[0],
-      temp: data.value?.hourly.temperature_2m
-        ? Math.round(data.value.hourly.temperature_2m[0] ?? NaN)
-        : NaN,
-    },
-    {
-      weatherConditionIconPath: data.value?.hourly.weather_code
-        ? WEATHER_CODE_MAP.get(data.value.hourly.weather_code[1] ?? NaN)
-        : "",
-      date: data.value?.hourly.time[1],
-      temp: data.value?.hourly.temperature_2m
-        ? Math.round(data.value.hourly.temperature_2m[1] ?? NaN)
-        : NaN,
-    },
-    {
-      weatherConditionIconPath: data.value?.hourly.weather_code
-        ? WEATHER_CODE_MAP.get(data.value.hourly.weather_code[2] ?? NaN)
-        : "",
-      date: data.value?.hourly.time[2],
-      temp: data.value?.hourly.temperature_2m
-        ? Math.round(data.value.hourly.temperature_2m[2] ?? NaN)
-        : NaN,
-    },
-    {
-      weatherConditionIconPath: data.value?.hourly.weather_code
-        ? WEATHER_CODE_MAP.get(data.value.hourly.weather_code[3] ?? NaN)
-        : "",
-      date: data.value?.hourly.time[3],
-      temp: data.value?.hourly.temperature_2m
-        ? Math.round(data.value.hourly.temperature_2m[3] ?? NaN)
-        : NaN,
-    },
-    {
-      weatherConditionIconPath: data.value?.hourly.weather_code
-        ? WEATHER_CODE_MAP.get(data.value.hourly.weather_code[4] ?? NaN)
-        : "",
-      date: data.value?.hourly.time[4],
-      temp: data.value?.hourly.temperature_2m
-        ? Math.round(data.value.hourly.temperature_2m[4] ?? NaN)
-        : NaN,
-    },
-    {
-      weatherConditionIconPath: data.value?.hourly.weather_code
-        ? WEATHER_CODE_MAP.get(data.value.hourly.weather_code[5] ?? NaN)
-        : "",
-      date: data.value?.hourly.time[5],
-      temp: data.value?.hourly.temperature_2m
-        ? Math.round(data.value.hourly.temperature_2m[5] ?? NaN)
-        : NaN,
-    },
-    {
-      weatherConditionIconPath: data.value?.hourly.weather_code
-        ? WEATHER_CODE_MAP.get(data.value.hourly.weather_code[6] ?? NaN)
-        : "",
-      date: data.value?.hourly.time[6],
-      temp: data.value?.hourly.temperature_2m
-        ? Math.round(data.value.hourly.temperature_2m[6] ?? NaN)
-        : NaN,
-    },
-    {
-      weatherConditionIconPath: data.value?.hourly.weather_code
-        ? WEATHER_CODE_MAP.get(data.value.hourly.weather_code[7] ?? NaN)
-        : "",
-      date: data.value?.hourly.time[7],
-      temp: data.value?.hourly.temperature_2m
-        ? Math.round(data.value.hourly.temperature_2m[7] ?? NaN)
-        : NaN,
-    },
-  ];
+  const hourlyValues = data.value?.hourly;
+  if (hourlyValues == undefined) return null;
+
+  const { time, weather_code: code, temperature_2m: temp } = hourlyValues;
+
+  if (!time || !code || !temp) return null;
+
+  // return 12 items for now
+  const arr = [];
+
+  for (let i = 0; i < 12; i++) {
+    const [ti, c, tm] = [time[i], code[i], temp[i]];
+    if (ti == undefined || c == undefined || tm == undefined) return null;
+
+    arr.push({
+      weatherConditionIconPath: getWeatherMeta(c).src,
+      weatherIconDescription: getWeatherMeta(c).alt,
+      isoDate: getIsoDate(ti),
+      hour12: formatTo12Hour(ti),
+      temp: roundValue(tm),
+    });
+  }
+
+  return arr;
 });
 </script>
 
@@ -233,25 +140,19 @@ const hourlyForecasts = computed(() => {
 
     <SearchBar />
 
-    <p v-if="error || currentTempRounded == undefined">{{ error }}</p>
+    <p v-if="error || !currentWeatherDetails || !weatherHighlights">
+      {{ error }}
+    </p>
 
     <section v-else class="grid grid-cols-3 gap-4">
-      <CurrentWeatherCard
-        :city="'Batangas'"
-        :country="'Philippines'"
-        :currentTemp="currentTempRounded"
-        :weatherConditionIconPath
-        :weatherDescription
-        :date="data?.current.time as Date"
-      />
+      <CurrentWeatherCard v-bind="currentWeatherDetails" />
 
       <section class="col-span-2">
         <ul class="flex gap-4">
           <WeatherHighlightCard
             v-for="weatherHighlight in weatherHighlights"
             :key="weatherHighlight.type"
-            :type="weatherHighlight.type"
-            :value="weatherHighlight.value"
+            v-bind="weatherHighlight"
           />
         </ul>
       </section>
@@ -261,12 +162,8 @@ const hourlyForecasts = computed(() => {
         <ul class="flex gap-4">
           <DailyForecastItem
             v-for="dailyForecast in dailyForecasts"
-            :key="dailyForecast.date?.toTimeString()"
-            :weatherConditionIconPath="dailyForecast.weatherConditionIconPath ?? ''"
-            :weatherConditionDescription="`uhmm`"
-            :date="dailyForecast.date as Date"
-            :temp-high="dailyForecast.tempHigh"
-            :temp-low="dailyForecast.tempLow"
+            :key="dailyForecast.isoDateOnly"
+            v-bind="dailyForecast"
           />
         </ul>
       </section>
@@ -280,11 +177,8 @@ const hourlyForecasts = computed(() => {
         <ul class="flex flex-col gap-3">
           <HourlyForecastItem
             v-for="hourlyForecast in hourlyForecasts"
-            :key="hourlyForecast.date?.toTimeString()"
-            :weatherConditionIconPath="hourlyForecast.weatherConditionIconPath ?? ''"
-            :date="hourlyForecast.date as Date"
-            :weatherConditionDescription="'uhmmm'"
-            :temp="Number(hourlyForecast.temp)"
+            :key="hourlyForecast.isoDate"
+            v-bind="hourlyForecast"
           />
         </ul>
       </section>

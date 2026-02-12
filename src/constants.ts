@@ -1,6 +1,6 @@
 const ICONS_PATH = "/images/";
 
-export const WEATHER_ICONS = {
+const WEATHER_ICONS = {
   SUNNY: `${ICONS_PATH}icon-sunny.webp`,
   PARTLY_CLOUDY: `${ICONS_PATH}icon-partly-cloudy.webp`,
   OVERCAST: `${ICONS_PATH}icon-overcast.webp`,
@@ -11,51 +11,62 @@ export const WEATHER_ICONS = {
   STORM: `${ICONS_PATH}icon-storm.webp`,
 };
 
-export const WEATHER_DESCRIPTION_MAP = new Map([
-  [WEATHER_ICONS.SUNNY, "Sunny weather"],
-  [WEATHER_ICONS.PARTLY_CLOUDY, "Partly cloudy weather"],
-  [WEATHER_ICONS.OVERCAST, "Overcast sky"],
-  [WEATHER_ICONS.FOG, "Foggy conditions"],
-  [WEATHER_ICONS.DRIZZLE, "Light drizzle"],
-  [WEATHER_ICONS.RAIN, "Rainy weather"],
-  [WEATHER_ICONS.SNOW, "Snowy weather"],
-  [WEATHER_ICONS.STORM, "Thunderstorm conditions"],
-]);
+const WEATHER_GROUPS = [
+  {
+    codes: [0, 1],
+    src: WEATHER_ICONS.SUNNY,
+    alt: "Sunny weather",
+  },
+  {
+    codes: [2],
+    src: WEATHER_ICONS.PARTLY_CLOUDY,
+    alt: "Partly cloudy weather",
+  },
+  {
+    codes: [3],
+    src: WEATHER_ICONS.OVERCAST,
+    alt: "Overcast sky",
+  },
+  {
+    codes: [45, 48],
+    src: WEATHER_ICONS.FOG,
+    alt: "Foggy conditions",
+  },
+  {
+    codes: [51, 53, 55, 56, 57],
+    src: WEATHER_ICONS.DRIZZLE,
+    alt: "Light drizzle",
+  },
+  {
+    codes: [61, 63, 65, 66, 67, 80, 81, 82],
+    src: WEATHER_ICONS.RAIN,
+    alt: "Rainy weather",
+  },
+  {
+    codes: [71, 73, 75, 77, 85, 86],
+    src: WEATHER_ICONS.SNOW,
+    alt: "Snowy weather",
+  },
+  {
+    codes: [95, 96, 99],
+    src: WEATHER_ICONS.STORM,
+    alt: "Thunderstorm conditions",
+  },
+] as const;
 
-export const WEATHER_CODE_MAP = new Map([
-  [0, WEATHER_ICONS.SUNNY],
-  [1, WEATHER_ICONS.SUNNY],
+export type WeatherMeta = { src: string; alt: string };
 
-  [2, WEATHER_ICONS.PARTLY_CLOUDY],
+export const WEATHER_CODE_MAP: ReadonlyMap<number, WeatherMeta> = new Map(
+  WEATHER_GROUPS.flatMap(({ codes, src, alt }) =>
+    codes.map((code) => [code, { src, alt }] as const),
+  ),
+);
 
-  [3, WEATHER_ICONS.OVERCAST],
+export const DATE_WITH_WEEKDAY_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  weekday: "long",
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
 
-  [45, WEATHER_ICONS.FOG],
-  [48, WEATHER_ICONS.FOG],
-
-  [51, WEATHER_ICONS.DRIZZLE],
-  [53, WEATHER_ICONS.DRIZZLE],
-  [55, WEATHER_ICONS.DRIZZLE],
-  [56, WEATHER_ICONS.DRIZZLE],
-  [57, WEATHER_ICONS.DRIZZLE],
-
-  [61, WEATHER_ICONS.RAIN],
-  [63, WEATHER_ICONS.RAIN],
-  [65, WEATHER_ICONS.RAIN],
-  [66, WEATHER_ICONS.RAIN],
-  [67, WEATHER_ICONS.RAIN],
-  [80, WEATHER_ICONS.RAIN],
-  [81, WEATHER_ICONS.RAIN],
-  [82, WEATHER_ICONS.RAIN],
-
-  [71, WEATHER_ICONS.SNOW],
-  [73, WEATHER_ICONS.SNOW],
-  [75, WEATHER_ICONS.SNOW],
-  [77, WEATHER_ICONS.SNOW],
-  [85, WEATHER_ICONS.SNOW],
-  [86, WEATHER_ICONS.SNOW],
-
-  [95, WEATHER_ICONS.STORM],
-  [96, WEATHER_ICONS.STORM],
-  [99, WEATHER_ICONS.STORM],
-]);
+export const SHORT_WEEKDAY_ONLY_FORMATTER = new Intl.DateTimeFormat("en-US", { weekday: "short" });

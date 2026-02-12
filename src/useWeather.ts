@@ -60,24 +60,12 @@ export function useWeather(coordinates: { latitude: number; longitude: number })
     try {
       const responses = await fetchWeatherApi(API_URL, weatherParams);
       const response = responses[0];
+
       if (!response) {
         throw new Error("Response is undefined!");
       }
 
-      // const latitude = response.latitude();
-      // const longitude = response.longitude();
-      // const elevation = response.elevation();
-      // const timezone = response.timezone();
-      // const timezoneAbbreviation = response.timezoneAbbreviation();
-
       const utcOffsetSeconds = response.utcOffsetSeconds();
-
-      // console.log(
-      //   `\nCoordinates: ${latitude}°N ${longitude}°E`,
-      //   `\nElevation: ${elevation}m asl`,
-      //   `\nTimezone: ${timezone} ${timezoneAbbreviation}`,
-      //   `\nTimezone difference to GMT+0: ${utcOffsetSeconds}s`,
-      // );
 
       const current = response.current()!;
       const hourly = response.hourly()!;
@@ -113,6 +101,8 @@ export function useWeather(coordinates: { latitude: number; longitude: number })
           weather_code: daily.variables(2)!.valuesArray(),
         },
       };
+
+      console.log(`No. of daily time entries: ${weatherData.daily.time.length}`);
 
       data.value = weatherData;
     } catch (e) {
