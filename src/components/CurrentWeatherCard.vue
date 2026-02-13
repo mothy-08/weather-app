@@ -1,15 +1,8 @@
 <script setup lang="ts">
+import type { Nowcast } from "@/types";
 import DegreeSymbol from "./DegreeSymbol.vue";
 
-defineProps<{
-  city: string;
-  country: string;
-  formattedDateWithWeekday: string;
-  isoDate: string;
-  weatherConditionIconPath: string;
-  weatherIconDescription: string;
-  currentTemp: number;
-}>();
+defineProps<Nowcast>();
 </script>
 
 <template>
@@ -18,13 +11,20 @@ defineProps<{
   >
     <div class="flex flex-col gap-2">
       <h2 class="text-2xl font-bold">{{ city }}, {{ country }}</h2>
-      <time :datetime="isoDate" class="text-base font-semibold text-neutral-200">{{
-        formattedDateWithWeekday
-      }}</time>
+      <time
+        :datetime="isoDate"
+        class="text-base font-semibold text-neutral-200"
+        >{{ formattedDateWithWeekday }}</time
+      >
     </div>
 
     <div class="flex items-center">
-      <img :src="weatherConditionIconPath" :alt="weatherIconDescription" width="128" height="128" />
+      <img
+        :src="weatherConditionIconPath"
+        :alt="weatherIconDescription"
+        width="128"
+        height="128"
+      />
       <data :value="currentTemp" class="text-8xl font-bold italic">
         {{ currentTemp }}<DegreeSymbol />
       </data>

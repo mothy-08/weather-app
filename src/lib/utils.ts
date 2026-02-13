@@ -36,7 +36,7 @@ function getIsoDate(date: Date): string {
   return date.toISOString();
 }
 
-function formatTo12Hour(date: Date): string {
+function formatToHour12(date: Date): string {
   return date.toLocaleTimeString("en-US", { hour: "numeric", hour12: true });
 }
 
@@ -48,5 +48,5 @@ export {
   formatShortWeekdayOnly,
   getIsoDateOnly,
   getIsoDate,
-  formatTo12Hour,
+  formatToHour12,
 };

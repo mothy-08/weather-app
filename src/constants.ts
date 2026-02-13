@@ -1,3 +1,7 @@
+import type { WeatherMeta } from "./types";
+
+const API_URL = "https://api.open-meteo.com/v1/forecast";
+
 const ICONS_PATH = "/images/";
 
 const WEATHER_ICONS = {
@@ -54,19 +58,26 @@ const WEATHER_GROUPS = [
   },
 ] as const;
 
-export type WeatherMeta = { src: string; alt: string };
-
-export const WEATHER_CODE_MAP: ReadonlyMap<number, WeatherMeta> = new Map(
+const WEATHER_CODE_MAP: ReadonlyMap<number, WeatherMeta> = new Map(
   WEATHER_GROUPS.flatMap(({ codes, src, alt }) =>
     codes.map((code) => [code, { src, alt }] as const),
   ),
 );
 
-export const DATE_WITH_WEEKDAY_FORMATTER = new Intl.DateTimeFormat("en-US", {
+const DATE_WITH_WEEKDAY_FORMATTER = new Intl.DateTimeFormat("en-US", {
   weekday: "long",
   month: "short",
   day: "numeric",
   year: "numeric",
 });
 
-export const SHORT_WEEKDAY_ONLY_FORMATTER = new Intl.DateTimeFormat("en-US", { weekday: "short" });
+const SHORT_WEEKDAY_ONLY_FORMATTER = new Intl.DateTimeFormat("en-US", {
+  weekday: "short",
+});
+
+export {
+  API_URL,
+  WEATHER_CODE_MAP,
+  DATE_WITH_WEEKDAY_FORMATTER,
+  SHORT_WEEKDAY_ONLY_FORMATTER,
+};

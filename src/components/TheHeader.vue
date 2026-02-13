@@ -5,7 +5,12 @@ import UnitsDropdown from "./UnitsDropdown.vue";
 <template>
   <header class="flex justify-between px-16 py-8">
     <a @click.prevent href="/">
-      <img src="/images/logo.svg" alt="Weather app logo" width="192" height="108" />
+      <img
+        src="/images/logo.svg"
+        alt="Weather app logo"
+        width="192"
+        height="108"
+      />
     </a>
     <UnitsDropdown />
   </header>

@@ -1,39 +1,23 @@
 import { fetchWeatherApi } from "openmeteo";
 import { ref, toValue, watchEffect } from "vue";
+import type { AdaptedWeatherData, WeatherData } from "./types";
+import { API_URL } from "./constants";
+import {
+  adaptCurrentWeather,
+  adaptDailyForecasts,
+  adaptHourlyForecast,
+  adaptWeatherHiglights,
+} from "./adapter";
 
-const API_URL = "https://api.open-meteo.com/v1/forecast";
-
-export type CurrentWeather = {
-  time: Date;
-  temperature_2m: number;
-  relative_humidity_2m: number;
-  apparent_temperature: number;
-  precipitation: number;
-  wind_speed_10m: number;
-  weather_code: number;
-};
-
-export type HourlyWeather = {
-  time: Date[];
-  temperature_2m: Float32Array<ArrayBufferLike> | null;
-  weather_code: Float32Array<ArrayBufferLike> | null;
-};
-
-export type DailyWeather = {
-  time: Date[];
-  temperature_2m_max: Float32Array<ArrayBufferLike> | null;
-  temperature_2m_min: Float32Array<ArrayBufferLike> | null;
-  weather_code: Float32Array<ArrayBufferLike> | null;
-};
-
-export type WeatherData = {
-  current: CurrentWeather;
-  hourly: HourlyWeather;
-  daily: DailyWeather;
-};
-
-export function useWeather(coordinates: { latitude: number; longitude: number }) {
-  const data = ref<WeatherData | null>(null);
+export function useWeather(params: {
+  coordinates: {
+    latitude: number;
+    longitude: number;
+  };
+  location: { city: string; country: string };
+}) {
+  const { coordinates, location } = params;
+  const data = ref<AdaptedWeatherData | null>(null);
   const error = ref<unknown | null>(null);
 
   watchEffect(async () => {
@@ -41,6 +25,7 @@ export function useWeather(coordinates: { latitude: number; longitude: number })
     error.value = null;
 
     const { latitude, longitude } = toValue(coordinates);
+
     const weatherParams = {
       latitude,
       longitude,
@@ -71,40 +56,71 @@ export function useWeather(coordinates: { latitude: number; longitude: number })
       const hourly = response.hourly()!;
       const daily = response.daily()!;
 
-      const weatherData = {
+      const weatherData: WeatherData = {
         current: {
-          time: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
-          temperature_2m: current.variables(0)!.value(),
-          relative_humidity_2m: current.variables(1)!.value(),
-          apparent_temperature: current.variables(2)!.value(),
+          date: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
+          temp: current.variables(0)!.value(),
+          humidity: current.variables(1)!.value(),
+          apparentTemp: current.variables(2)!.value(),
           precipitation: current.variables(3)!.value(),
-          wind_speed_10m: current.variables(4)!.value(),
-          weather_code: current.variables(5)!.value(),
+          windSpeed: current.variables(4)!.value(),
+
+          weatherCode: current.variables(5)!.value(),
         },
         hourly: {
-          time: Array.from(
-            { length: (Number(hourly.timeEnd()) - Number(hourly.time())) / hourly.interval() },
+          dates: Array.from(
+            {
+              length:
+                (Number(hourly.timeEnd()) - Number(hourly.time())) /
+                hourly.interval(),
+            },
             (_, i) =>
-              new Date((Number(hourly.time()) + i * hourly.interval() + utcOffsetSeconds) * 1000),
+              new Date(
+                (Number(hourly.time()) +
+                  i * hourly.interval() +
+                  utcOffsetSeconds) *
+                  1000,
+              ),
           ),
-          temperature_2m: hourly.variables(0)!.valuesArray(),
-          weather_code: hourly.variables(1)!.valuesArray(),
+          temps: hourly.variables(0)!.valuesArray(),
+          weatherCodes: hourly.variables(1)!.valuesArray(),
         },
         daily: {
-          time: Array.from(
-            { length: (Number(daily.timeEnd()) - Number(daily.time())) / daily.interval() },
+          dates: Array.from(
+            {
+              length:
+                (Number(daily.timeEnd()) - Number(daily.time())) /
+                daily.interval(),
+            },
             (_, i) =>
-              new Date((Number(daily.time()) + i * daily.interval() + utcOffsetSeconds) * 1000),
+              new Date(
+                (Number(daily.time()) +
+                  i * daily.interval() +
+                  utcOffsetSeconds) *
+                  1000,
+              ),
           ),
-          temperature_2m_max: daily.variables(0)!.valuesArray(),
-          temperature_2m_min: daily.variables(1)!.valuesArray(),
-          weather_code: daily.variables(2)!.valuesArray(),
+          tempsMax: daily.variables(0)!.valuesArray(),
+          tempsMin: daily.variables(1)!.valuesArray(),
+          weatherCodes: daily.variables(2)!.valuesArray(),
         },
       };
 
-      console.log(`No. of daily time entries: ${weatherData.daily.time.length}`);
+      const { city, country } = toValue(location);
 
-      data.value = weatherData;
+      // TODO: city & country => must be inferred from coordinates
+      const adaptedWeatherData = {
+        overview: adaptCurrentWeather({
+          current: weatherData.current,
+          city,
+          country,
+        }),
+        highlight: adaptWeatherHiglights(weatherData.current),
+        daily: adaptDailyForecasts(weatherData.daily),
+        hourly: adaptHourlyForecast(weatherData.hourly),
+      } as const;
+
+      data.value = adaptedWeatherData;
     } catch (e) {
       error.value = e;
     }

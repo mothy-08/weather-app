@@ -1,13 +1,8 @@
 <script setup lang="ts">
+import type { HourlyForecast } from "@/types";
 import DegreeSymbol from "./DegreeSymbol.vue";
 
-defineProps<{
-  weatherConditionIconPath: string;
-  weatherIconDescription: string;
-  isoDate: string;
-  hour12: string;
-  temp: number;
-}>();
+defineProps<HourlyForecast>();
 </script>
 
 <template>
@@ -15,7 +10,12 @@ defineProps<{
     class="flex items-center justify-between rounded-lg border border-neutral-600 bg-neutral-700 p-2"
   >
     <div class="flex items-center gap-2">
-      <img :src="weatherConditionIconPath" :alt="weatherIconDescription" width="32" height="32" />
+      <img
+        :src="weatherConditionIconPath"
+        :alt="weatherIconDescription"
+        width="32"
+        height="32"
+      />
       <time :datetime="isoDate"> {{ hour12 }} </time>
     </div>
 

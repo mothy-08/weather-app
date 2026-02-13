@@ -23,15 +23,24 @@ function changeMeasurementSystem() {
     currentMeasurementSystem.value === "metric" ? "imperial" : "metric";
 }
 
-const isMetricSystem = computed(() => currentMeasurementSystem.value === "metric");
-const isImperialSystem = computed(() => currentMeasurementSystem.value === "imperial");
+const isMetricSystem = computed(
+  () => currentMeasurementSystem.value === "metric",
+);
+const isImperialSystem = computed(
+  () => currentMeasurementSystem.value === "imperial",
+);
 </script>
 
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
       <Button>
-        <img src="/images/icon-units.svg" alt="Settings icon for dropdown" width="16" height="16" />
+        <img
+          src="/images/icon-units.svg"
+          alt="Settings icon for dropdown"
+          width="16"
+          height="16"
+        />
         Units
         <img
           src="/images/icon-dropdown.svg"
@@ -62,7 +71,10 @@ const isImperialSystem = computed(() => currentMeasurementSystem.value === "impe
           :class="{ 'bg-accent': isImperialSystem }"
           class="flex items-center justify-between"
         >
-          <span>Fahrenheit (<DegreeSymbol /><abbr title="Fahrenheit">F</abbr>)</span>
+          <span
+            >Fahrenheit (<DegreeSymbol /><abbr title="Fahrenheit">F</abbr
+            >)</span
+          >
           <img
             src="/images/icon-checkmark.svg"
             alt="Checkmark icon for temperature in fahrenheit"

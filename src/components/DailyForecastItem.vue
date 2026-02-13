@@ -1,14 +1,8 @@
 <script setup lang="ts">
+import type { DailyForecast } from "@/types";
 import DegreeSymbol from "./DegreeSymbol.vue";
 
-defineProps<{
-  isoDateOnly: string;
-  shortWeekdayOnly: string;
-  weatherConditionIconPath: string;
-  weatherIconDescription: string;
-  tempHigh: number;
-  tempLow: number;
-}>();
+defineProps<DailyForecast>();
 </script>
 
 <template>
@@ -17,7 +11,12 @@ defineProps<{
   >
     <time :datetime="isoDateOnly">{{ shortWeekdayOnly }}</time>
 
-    <img :src="weatherConditionIconPath" :alt="weatherIconDescription" width="64" height="64" />
+    <img
+      :src="weatherConditionIconPath"
+      :alt="weatherIconDescription"
+      width="64"
+      height="64"
+    />
 
     <div class="flex w-full justify-between">
       <data :value="tempHigh">{{ tempHigh }}<DegreeSymbol /></data>

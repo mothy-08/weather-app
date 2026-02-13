@@ -8,7 +8,12 @@ import Input from "./ui/input/Input.vue";
     <div
       class="focus-within:outline-ring flex w-96 items-center gap-3 rounded-lg bg-neutral-800 px-4 py-2 outline"
     >
-      <img src="/images/icon-search.svg" alt="Search icon" width="16" height="16" />
+      <img
+        src="/images/icon-search.svg"
+        alt="Search icon"
+        width="16"
+        height="16"
+      />
       <Input
         type="search"
         class="border-0 focus-visible:ring-0"
