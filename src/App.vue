@@ -3,12 +3,13 @@ import TheHeader from "./components/TheHeader.vue";
 import SearchBar from "./components/SearchBar.vue";
 import CurrentWeatherCard from "./components/CurrentWeatherCard.vue";
 import { useWeather } from "./useWeather";
-import { computed, reactive } from "vue";
+import { computed, ref } from "vue";
 import WeatherHighlightCard from "./components/WeatherHighlightCard.vue";
 import DailyForecastItem from "./components/DailyForecastItem.vue";
 import HourlyForecastItem from "./components/HourlyForecastItem.vue";
+import DaysDropdown from "./components/DaysDropdown.vue";
 
-const currentLoc = reactive({
+const currentLoc = ref({
   coordinates: {
     latitude: 13.7567,
     longitude: 121.0584,
@@ -19,7 +20,7 @@ const currentLoc = reactive({
   },
 });
 
-const { data, error } = useWeather(currentLoc);
+const { data, error } = useWeather(currentLoc.value);
 
 const overview = computed(() => data.value?.overview);
 const highlight = computed(() => data.value?.highlight);
@@ -62,8 +63,9 @@ const hourlies = computed(() => data.value?.hourly);
       <section
         class="col-start-3 row-start-1 row-end-4 flex flex-col gap-4 rounded-xl bg-neutral-800 px-4 py-6"
       >
-        <div>
+        <div class="flex items-center justify-between">
           <h2 class="font-bold">Hourly Forecast</h2>
+          <DaysDropdown currentDay="Tuesday" />
         </div>
         <ul class="flex flex-col gap-3">
           <HourlyForecastItem
