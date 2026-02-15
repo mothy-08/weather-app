@@ -1,8 +1,16 @@
 <script setup lang="ts">
 import type { Nowcast } from "@/types";
 import DegreeSymbol from "./DegreeSymbol.vue";
+import { computed } from "vue";
+import { useUnits } from "@/composables/useUnits";
+import { celsiusToFahrenheit } from "@/lib/converters";
 
-defineProps<Nowcast>();
+const props = defineProps<Nowcast>();
+const { tempUnit } = useUnits();
+
+const displayTemp = computed(() =>
+  tempUnit.value === "c" ? props.temp : celsiusToFahrenheit(props.temp),
+);
 </script>
 
 <template>
@@ -11,22 +19,15 @@ defineProps<Nowcast>();
   >
     <div class="flex flex-col gap-2">
       <h2 class="text-2xl font-bold">{{ city }}, {{ country }}</h2>
-      <time
-        :datetime="isoDate"
-        class="text-base font-semibold text-neutral-200"
-        >{{ formattedDateWithWeekday }}</time
-      >
+      <time :datetime="date" class="text-base font-semibold text-neutral-200">
+        {{ weekdayWithDate }}
+      </time>
     </div>
 
     <div class="flex items-center">
-      <img
-        :src="weatherConditionIconPath"
-        :alt="weatherIconDescription"
-        width="128"
-        height="128"
-      />
-      <data :value="currentTemp" class="text-8xl font-bold italic">
-        {{ currentTemp }}<DegreeSymbol />
+      <img :src="icon.src" :alt="icon.alt" width="128" height="128" />
+      <data :value="displayTemp" class="text-8xl font-bold italic">
+        {{ displayTemp }}<DegreeSymbol />
       </data>
     </div>
   </article>

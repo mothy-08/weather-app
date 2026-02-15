@@ -1,11 +1,11 @@
 export type CurrentWeather = {
   date: Date;
-  temp: number;
-  humidity: number;
-  apparentTemp: number;
-  precipitation: number;
-  windSpeed: number;
   weatherCode: number;
+  temp: number;
+  feelsLike: number;
+  humidity: number;
+  windSpeed: number;
+  precipitation: number;
 };
 
 export type HourlyWeather = {
@@ -27,14 +27,15 @@ export type WeatherData = {
   daily: DailyWeather;
 };
 
+export type IconMeta = { src: string; alt: string };
+
 export type Nowcast = {
   city: string;
   country: string;
-  formattedDateWithWeekday: string;
-  isoDate: string;
-  weatherConditionIconPath: string;
-  weatherIconDescription: string;
-  currentTemp: number;
+  weekdayWithDate: string;
+  date: string;
+  temp: number;
+  icon: IconMeta;
 };
 
 export type WeatherHighlight = {
@@ -45,20 +46,18 @@ export type WeatherHighlight = {
 };
 
 export type DailyForecast = {
-  isoDateOnly: string;
-  shortWeekdayOnly: string;
-  weatherConditionIconPath: string;
-  weatherIconDescription: string;
+  date: string;
+  weekdayShort: string;
+  icon: IconMeta;
   tempHigh: number;
   tempLow: number;
 };
 
 export type HourlyForecast = {
-  weatherConditionIconPath: string;
-  weatherIconDescription: string;
-  isoDate: string;
+  date: string;
   hour12: string;
   temp: number;
+  icon: IconMeta;
 };
 
 export type AdaptedWeatherData = {
@@ -67,5 +66,3 @@ export type AdaptedWeatherData = {
   daily: DailyForecast[];
   hourly: HourlyForecast[];
 };
-
-export type WeatherMeta = { src: string; alt: string };

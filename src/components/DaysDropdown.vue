@@ -5,64 +5,63 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { computed, ref } from "vue";
-
-const WEEKDAYS = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-] as const;
-
-type Weekday = (typeof WEEKDAYS)[number];
+import Button from "./ui/button/Button.vue"; // Ensure this path matches your project structure
+import type { DailyForecast } from "@/types";
+import { computed } from "vue";
 
 const props = defineProps<{
-  currentDay: Weekday;
+  items: DailyForecast[]; // Pass the actual API data here
+  modelValue: string; // The currently selected date string (e.g., "2023-10-25")
 }>();
 
-const currentDayChange = ref(props.currentDay);
+const emit = defineEmits<{
+  (e: "update:modelValue", value: string): void;
+}>();
 
-const startIndex = computed(() => {
-  const idx = WEEKDAYS.indexOf(props.currentDay);
-  return idx === -1 ? 0 : idx;
+// Helper to display full weekday name (e.g., "Monday") from the ISO date
+function getWeekdayName(dateStr: string): string {
+  if (!dateStr) return "";
+  return new Date(dateStr).toLocaleDateString("en-US", { weekday: "long" });
+}
+
+// Compute the label for the trigger button
+const selectedLabel = computed(() => {
+  const found = props.items.find((i) => i.date === props.modelValue);
+  return found ? getWeekdayName(found.date) : "Select Day";
 });
-
-const availableDays = [
-  ...WEEKDAYS.slice(startIndex.value),
-  ...WEEKDAYS.slice(0, startIndex.value),
-];
 </script>
 
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <Button class="flex items-center gap-2 text-base">
-        {{ currentDayChange }}
+      <Button class="flex cursor-pointer items-center gap-2 text-base">
+        {{ selectedLabel }}
         <img
           src="/images/icon-dropdown.svg"
-          alt="Chevron down icon for dropdown"
+          alt="Chevron down icon"
           width="12"
           height="12"
         />
       </Button>
     </DropdownMenuTrigger>
 
-    <DropdownMenuContent class="w-56" align="end">
+    <DropdownMenuContent
+      class="w-56 border-neutral-700 bg-neutral-900"
+      align="end"
+    >
       <DropdownMenuItem
-        :class="{ 'bg-neutral-600': day === currentDayChange }"
-        class="justify-between"
-        v-for="day in availableDays"
-        :key="day"
-        @click="currentDayChange = day"
+        v-for="item in items"
+        :key="item.date"
+        :class="{ 'bg-neutral-700': item.date === modelValue }"
+        class="cursor-pointer justify-between focus:bg-neutral-800"
+        @click="emit('update:modelValue', item.date)"
       >
-        {{ day }}
+        <span>{{ getWeekdayName(item.date) }}</span>
+
         <img
+          v-if="item.date === modelValue"
           src="/images/icon-checkmark.svg"
-          alt="Checkmark icon for precipitation in inches"
-          v-if="day === currentDayChange"
+          alt="Selected"
           width="12"
           height="12"
         />

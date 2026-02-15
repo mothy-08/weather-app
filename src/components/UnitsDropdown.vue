@@ -9,132 +9,159 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { computed, ref } from "vue";
+import { useUnits } from "@/composables/useUnits";
 import DegreeSymbol from "./DegreeSymbol.vue";
 
-type MeasurementSystem = "metric" | "imperial";
+const {
+  tempUnit,
+  speedUnit,
+  precipUnit,
+  isMetric,
+  setMetric,
+  setImperial,
+  toggleTemp,
+  toggleSpeed,
+  togglePrecip,
+} = useUnits();
 
-const previousMeasurementSystem = ref<MeasurementSystem>("imperial");
-const currentMeasurementSystem = ref<MeasurementSystem>("metric");
-
-function changeMeasurementSystem() {
-  previousMeasurementSystem.value = currentMeasurementSystem.value;
-  currentMeasurementSystem.value =
-    currentMeasurementSystem.value === "metric" ? "imperial" : "metric";
+function toggleSystem() {
+  if (isMetric.value) {
+    setImperial();
+  } else {
+    setMetric();
+  }
 }
-
-const isMetricSystem = computed(
-  () => currentMeasurementSystem.value === "metric",
-);
-const isImperialSystem = computed(
-  () => currentMeasurementSystem.value === "imperial",
-);
 </script>
 
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <Button>
+      <Button variant="ghost" size="sm" class="gap-2">
         <img
           src="/images/icon-units.svg"
-          alt="Settings icon for dropdown"
+          alt="Settings icon"
           width="16"
           height="16"
         />
         Units
         <img
           src="/images/icon-dropdown.svg"
-          alt="Chevron down icon for dropdown"
-          width="16"
-          height="16"
+          alt="Chevron down icon"
+          width="12"
+          height="12"
         />
       </Button>
     </DropdownMenuTrigger>
-    <DropdownMenuContent class="w-56" align="end">
-      <DropdownMenuItem @click="changeMeasurementSystem">
-        Switch to {{ previousMeasurementSystem }}
+
+    <DropdownMenuContent
+      class="w-56 border-neutral-700 bg-neutral-900"
+      align="end"
+    >
+      <DropdownMenuItem
+        @click="toggleSystem"
+        class="cursor-pointer focus:bg-neutral-800"
+      >
+        Switch to {{ isMetric ? "Imperial" : "Metric" }} System
       </DropdownMenuItem>
-      <DropdownMenuLabel>Temperature</DropdownMenuLabel>
+
+      <DropdownMenuSeparator class="bg-neutral-700" />
+
+      <DropdownMenuLabel class="text-xs text-neutral-400">
+        Temperature
+      </DropdownMenuLabel>
       <DropdownMenuGroup>
         <DropdownMenuItem
-          :class="{ 'bg-accent': isMetricSystem }"
-          class="flex items-center justify-between"
+          @click="toggleTemp"
+          class="flex cursor-pointer items-center justify-between focus:bg-neutral-800"
         >
-          <span>Celsius (<DegreeSymbol /><abbr title="Celsius">C</abbr>)</span>
+          <span>Celsius (<DegreeSymbol />C)</span>
           <img
+            v-if="tempUnit === 'c'"
             src="/images/icon-checkmark.svg"
-            alt="Checkmark icon for temperature in celsius"
-            v-if="isMetricSystem"
+            alt="Selected"
+            width="12"
+            height="12"
           />
         </DropdownMenuItem>
         <DropdownMenuItem
-          :class="{ 'bg-accent': isImperialSystem }"
-          class="flex items-center justify-between"
+          @click="toggleTemp"
+          class="flex cursor-pointer items-center justify-between focus:bg-neutral-800"
         >
-          <span
-            >Fahrenheit (<DegreeSymbol /><abbr title="Fahrenheit">F</abbr
-            >)</span
-          >
+          <span>Fahrenheit (<DegreeSymbol />F)</span>
           <img
+            v-if="tempUnit === 'f'"
             src="/images/icon-checkmark.svg"
-            alt="Checkmark icon for temperature in fahrenheit"
-            v-if="isImperialSystem"
+            alt="Selected"
+            width="12"
+            height="12"
           />
         </DropdownMenuItem>
       </DropdownMenuGroup>
 
-      <DropdownMenuSeparator />
+      <DropdownMenuSeparator class="bg-neutral-700" />
 
-      <DropdownMenuLabel>Wind Speed</DropdownMenuLabel>
+      <DropdownMenuLabel class="text-xs text-neutral-400">
+        Wind Speed
+      </DropdownMenuLabel>
       <DropdownMenuGroup>
         <DropdownMenuItem
-          :class="{ 'bg-accent': isMetricSystem }"
-          class="flex items-center justify-between"
+          @click="toggleSpeed"
+          class="flex cursor-pointer items-center justify-between focus:bg-neutral-800"
         >
-          km/h
+          <span>km/h</span>
           <img
+            v-if="speedUnit === 'kmh'"
             src="/images/icon-checkmark.svg"
-            alt="Checkmark icon for wind speed kilometer per hour"
-            v-if="isMetricSystem"
+            alt="Selected"
+            width="12"
+            height="12"
           />
         </DropdownMenuItem>
         <DropdownMenuItem
-          :class="{ 'bg-accent': isImperialSystem }"
-          class="flex items-center justify-between"
+          @click="toggleSpeed"
+          class="flex cursor-pointer items-center justify-between focus:bg-neutral-800"
         >
-          mph
+          <span>mph</span>
           <img
+            v-if="speedUnit === 'mph'"
             src="/images/icon-checkmark.svg"
-            alt="Checkmark icon for wind speed in miles per hour"
-            v-if="isImperialSystem"
+            alt="Selected"
+            width="12"
+            height="12"
           />
         </DropdownMenuItem>
       </DropdownMenuGroup>
 
-      <DropdownMenuSeparator />
+      <DropdownMenuSeparator class="bg-neutral-700" />
 
-      <DropdownMenuLabel>Precipitation</DropdownMenuLabel>
+      <DropdownMenuLabel class="text-xs text-neutral-400">
+        Precipitation
+      </DropdownMenuLabel>
       <DropdownMenuGroup>
         <DropdownMenuItem
-          :class="{ 'bg-accent': isMetricSystem }"
-          class="flex items-center justify-between"
+          @click="togglePrecip"
+          class="flex cursor-pointer items-center justify-between focus:bg-neutral-800"
         >
-          Millimeters (mm)
+          <span>Millimeters (mm)</span>
           <img
+            v-if="precipUnit === 'mm'"
             src="/images/icon-checkmark.svg"
-            alt="Checkmark icon for precipitation in millimeters"
-            v-if="isMetricSystem"
+            alt="Selected"
+            width="12"
+            height="12"
           />
         </DropdownMenuItem>
         <DropdownMenuItem
-          :class="{ 'bg-accent': isImperialSystem }"
-          class="flex items-center justify-between"
+          @click="togglePrecip"
+          class="flex cursor-pointer items-center justify-between focus:bg-neutral-800"
         >
-          Inches (in)
+          <span>Inches (in)</span>
           <img
+            v-if="precipUnit === 'in'"
             src="/images/icon-checkmark.svg"
-            alt="Checkmark icon for precipitation in inches"
-            v-if="isImperialSystem"
+            alt="Selected"
+            width="12"
+            height="12"
           />
         </DropdownMenuItem>
       </DropdownMenuGroup>
