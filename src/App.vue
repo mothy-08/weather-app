@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import TheHeader from "./components/TheHeader.vue";
+import UnitsDropdown from "./components/UnitsDropdown.vue";
 import SearchBar from "./components/SearchBar.vue";
 import CurrentWeatherCard from "./components/CurrentWeatherCard.vue";
 import { useWeather } from "./useWeather";
@@ -75,65 +75,76 @@ function handleLocationSelect(payload: {
 </script>
 
 <template>
-  <TheHeader />
+  <div class="mx-auto flex max-w-4/5 flex-col gap-16 py-6">
+    <header class="flex justify-between">
+      <a @click.prevent href="/">
+        <img
+          src="/images/logo.svg"
+          alt="Weather app logo"
+          width="192"
+          height="108"
+        />
+      </a>
+      <UnitsDropdown />
+    </header>
 
-  <main class="flex flex-col items-center justify-center gap-8 pb-10">
-    <h1 class="font-grotesque text-5xl">How's the sky looking today?</h1>
+    <main class="flex flex-col items-center justify-center gap-8">
+      <h1 class="font-grotesque text-5xl">How's the sky looking today?</h1>
 
-    <SearchBar @select-location="handleLocationSelect" />
+      <SearchBar @select-location="handleLocationSelect" />
 
-    <p v-if="error" class="text-red-500">{{ error }}</p>
+      <p v-if="error" class="text-red-500">
+        {{ error }}
+      </p>
 
-    <WeatherSkeleton v-else-if="isLoading || !data" />
+      <WeatherSkeleton
+        v-else-if="isLoading || !data || !overview || !highlight"
+      />
 
-    <section v-else class="grid w-full max-w-5xl grid-cols-3 gap-4">
-      <CurrentWeatherCard v-bind="overview!" />
+      <section v-else class="grid grid-cols-3 gap-4">
+        <CurrentWeatherCard v-bind="overview" />
 
-      <section class="col-span-2">
-        <ul class="flex gap-4">
-          <WeatherHighlightCard v-bind="highlight!" />
-        </ul>
-      </section>
+        <section class="col-span-2 my-auto">
+          <ul class="flex gap-4">
+            <WeatherHighlightCard v-bind="highlight" />
+          </ul>
+        </section>
 
-      <section class="col-span-2 flex flex-col gap-4">
-        <h2>Daily Forecast</h2>
-        <ul class="flex gap-4 overflow-x-auto pb-2">
-          <DailyForecastItem
-            v-for="daily in dailies"
-            :key="daily.date"
-            v-bind="daily"
-            class="cursor-pointer transition-colors"
-            :class="selectedDate === daily.date ? 'ring-2 ring-white' : ''"
-            @click="selectedDate = daily.date"
-          />
-        </ul>
-      </section>
+        <section class="col-span-2 flex flex-col justify-between">
+          <h2>Daily Forecast</h2>
+          <ul class="flex gap-4 overflow-x-auto">
+            <DailyForecastItem
+              v-for="daily in dailies"
+              :key="daily.date"
+              v-bind="daily"
+            />
+          </ul>
+        </section>
 
-      <section
-        class="col-start-3 row-start-1 row-end-4 flex flex-col gap-4 rounded-xl bg-neutral-800 px-4 py-6"
-      >
-        <div class="flex items-center justify-between">
-          <h2 class="font-bold">Hourly Forecast</h2>
-
-          <DaysDropdown :items="dailies" v-model="selectedDate" />
-        </div>
-
-        <ul
-          class="scrollbar-thin flex h-150 flex-col gap-3 overflow-y-auto pr-2"
+        <section
+          class="col-start-3 row-start-1 row-end-4 flex flex-col gap-4 rounded-xl bg-neutral-800 px-4 py-6"
         >
-          <HourlyForecastItem
-            v-for="hourly in filteredHourlies"
-            :key="hourly.date"
-            v-bind="hourly"
-          />
-          <li
-            v-if="filteredHourlies.length === 0"
-            class="py-4 text-center text-sm text-neutral-400"
-          >
-            No hourly data for this date.
-          </li>
-        </ul>
+          <div class="flex items-center justify-between">
+            <h2 class="font-bold">Hourly Forecast</h2>
+
+            <DaysDropdown :items="dailies" v-model="selectedDate" />
+          </div>
+
+          <ul class="flex h-150 flex-col gap-3 overflow-y-auto pr-2">
+            <HourlyForecastItem
+              v-for="hourly in filteredHourlies"
+              :key="hourly.date"
+              v-bind="hourly"
+            />
+            <li
+              v-if="filteredHourlies.length === 0"
+              class="py-4 text-center text-sm text-neutral-400"
+            >
+              No hourly data for this date.
+            </li>
+          </ul>
+        </section>
       </section>
-    </section>
-  </main>
+    </main>
+  </div>
 </template>

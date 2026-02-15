@@ -34,7 +34,9 @@ const selectedLabel = computed(() => {
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <Button class="flex cursor-pointer items-center gap-2 text-base">
+      <Button
+        class="flex cursor-pointer items-center gap-2 bg-neutral-600 text-sm hover:bg-neutral-600"
+      >
         {{ selectedLabel }}
         <img
           src="/images/icon-dropdown.svg"
@@ -46,14 +48,14 @@ const selectedLabel = computed(() => {
     </DropdownMenuTrigger>
 
     <DropdownMenuContent
-      class="w-56 border-neutral-700 bg-neutral-900"
+      class="text-neutral-0 w-56 border-neutral-600 bg-neutral-700"
       align="end"
     >
       <DropdownMenuItem
         v-for="item in items"
         :key="item.date"
         :class="{ 'bg-neutral-700': item.date === modelValue }"
-        class="cursor-pointer justify-between focus:bg-neutral-800"
+        class="focus:text-neutral-0 flex cursor-pointer items-center justify-between focus:bg-neutral-600"
         @click="emit('update:modelValue', item.date)"
       >
         <span>{{ getWeekdayName(item.date) }}</span>

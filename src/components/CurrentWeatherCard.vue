@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Nowcast } from "@/types";
-import DegreeSymbol from "./DegreeSymbol.vue";
 import { computed } from "vue";
 import { useUnits } from "@/composables/useUnits";
 import { celsiusToFahrenheit } from "@/lib/converters";
@@ -27,7 +26,7 @@ const displayTemp = computed(() =>
     <div class="flex items-center">
       <img :src="icon.src" :alt="icon.alt" width="128" height="128" />
       <data :value="displayTemp" class="text-8xl font-bold italic">
-        {{ displayTemp }}<DegreeSymbol />
+        {{ displayTemp }}°
       </data>
     </div>
   </article>

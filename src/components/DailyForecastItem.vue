@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { DailyForecast } from "@/types";
-import DegreeSymbol from "./DegreeSymbol.vue";
 import { computed } from "vue";
 import { useUnits } from "@/composables/useUnits";
 import { celsiusToFahrenheit } from "@/lib/converters";
@@ -25,10 +24,10 @@ const displayLow = computed(() =>
     <img :src="icon.src" :alt="icon.alt" width="64" height="64" />
 
     <div class="flex w-full justify-between gap-2">
-      <data :value="displayHigh">{{ displayHigh }}<DegreeSymbol /></data>
+      <data :value="displayHigh">{{ displayHigh }}°</data>
       <data :value="displayLow" class="text-neutral-400"
-        >{{ displayLow }}<DegreeSymbol
-      /></data>
+        >{{ displayLow }}°</data
+      >
     </div>
   </li>
 </template>

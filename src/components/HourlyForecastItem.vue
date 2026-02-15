@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { HourlyForecast } from "@/types";
-import DegreeSymbol from "./DegreeSymbol.vue";
 import { computed } from "vue";
 import { useUnits } from "@/composables/useUnits";
 import { celsiusToFahrenheit } from "@/lib/converters";
@@ -23,7 +22,7 @@ const displayTemp = computed(() =>
     </div>
 
     <data :value="displayTemp" class="text-sm font-semibold text-neutral-200">
-      {{ displayTemp }}<DegreeSymbol />
+      {{ displayTemp }}°
     </data>
   </li>
 </template>

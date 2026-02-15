@@ -101,8 +101,8 @@ function handleKeydown(e: KeyboardEvent) {
 
 <template>
   <form @submit.prevent="searchCity" class="flex items-center gap-3">
-    <div
-      class="focus-within:outline-ring relative flex w-96 items-center gap-3 rounded-lg bg-neutral-800 px-4 py-2 outline"
+    <search
+      class="focus-within:outline-ring relative flex w-96 items-center gap-3 rounded-lg bg-neutral-800 pl-4 outline"
     >
       <img
         src="/images/icon-search.svg"
@@ -111,8 +111,10 @@ function handleKeydown(e: KeyboardEvent) {
         height="16"
       />
       <Input
-        type="search"
-        class="border-0 focus-visible:ring-0"
+        type="text"
+        id="search"
+        name="q"
+        class="border-none accent-amber-200 focus-visible:ring-0"
         placeholder="Search for a place..."
         v-model.trim.lazy="city"
         @keydown="handleKeydown"
@@ -120,7 +122,7 @@ function handleKeydown(e: KeyboardEvent) {
 
       <ul
         v-if="results.length"
-        class="absolute top-full left-0 z-10 mt-2 w-full overflow-hidden rounded-md bg-neutral-900 shadow-lg"
+        class="absolute top-full left-0 z-10 mt-2 w-full overflow-hidden rounded-md bg-neutral-800 shadow-lg"
       >
         <li
           v-for="(result, index) in results"
@@ -135,8 +137,10 @@ function handleKeydown(e: KeyboardEvent) {
           {{ result.name }}, {{ result.country }}
         </li>
       </ul>
-    </div>
+    </search>
 
-    <Button type="submit" class="cursor-pointer">Search</Button>
+    <Button type="submit" class="cursor-pointer bg-blue-500 hover:bg-blue-700"
+      >Search</Button
+    >
   </form>
 </template>

@@ -3,14 +3,13 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useUnits } from "@/composables/useUnits";
-import DegreeSymbol from "./DegreeSymbol.vue";
+import { computed } from "vue";
+import UnitGroup from "./UnitGroup.vue";
 
 const {
   tempUnit,
@@ -31,12 +30,43 @@ function toggleSystem() {
     setMetric();
   }
 }
+
+const unitGroups = computed(() => {
+  return [
+    {
+      label: "Temperature",
+      metricDesc: "Celsius °C",
+      metricActive: tempUnit.value === "c",
+      imperialDesc: "Fahrenheit °F",
+      imperialActive: tempUnit.value === "f",
+      click: toggleTemp,
+    },
+    {
+      label: "Wind Speed",
+      metricDesc: "km/h",
+      metricActive: speedUnit.value === "kmh",
+      imperialDesc: "mph",
+      imperialActive: speedUnit.value === "mph",
+      click: toggleSpeed,
+    },
+    {
+      label: "Precipitation",
+      metricDesc: "mm",
+      metricActive: precipUnit.value === "mm",
+      imperialDesc: "mph",
+      imperialActive: precipUnit.value === "in",
+      click: togglePrecip,
+    },
+  ];
+});
 </script>
 
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <Button variant="ghost" size="sm" class="gap-2">
+      <Button
+        class="flex cursor-pointer items-center gap-2 bg-neutral-600 text-sm hover:bg-neutral-600"
+      >
         <img
           src="/images/icon-units.svg"
           alt="Settings icon"
@@ -54,117 +84,29 @@ function toggleSystem() {
     </DropdownMenuTrigger>
 
     <DropdownMenuContent
-      class="w-56 border-neutral-700 bg-neutral-900"
+      class="text-neutral-0 w-56 border-neutral-600 bg-neutral-700"
       align="end"
     >
       <DropdownMenuItem
         @click="toggleSystem"
-        class="cursor-pointer focus:bg-neutral-800"
+        class="focus:text-neutral-0 cursor-pointer focus:bg-neutral-600"
       >
         Switch to {{ isMetric ? "Imperial" : "Metric" }} System
       </DropdownMenuItem>
 
-      <DropdownMenuSeparator class="bg-neutral-700" />
+      <DropdownMenuSeparator class="bg-neutral-600" />
 
-      <DropdownMenuLabel class="text-xs text-neutral-400">
-        Temperature
-      </DropdownMenuLabel>
-      <DropdownMenuGroup>
-        <DropdownMenuItem
-          @click="toggleTemp"
-          class="flex cursor-pointer items-center justify-between focus:bg-neutral-800"
-        >
-          <span>Celsius (<DegreeSymbol />C)</span>
-          <img
-            v-if="tempUnit === 'c'"
-            src="/images/icon-checkmark.svg"
-            alt="Selected"
-            width="12"
-            height="12"
-          />
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          @click="toggleTemp"
-          class="flex cursor-pointer items-center justify-between focus:bg-neutral-800"
-        >
-          <span>Fahrenheit (<DegreeSymbol />F)</span>
-          <img
-            v-if="tempUnit === 'f'"
-            src="/images/icon-checkmark.svg"
-            alt="Selected"
-            width="12"
-            height="12"
-          />
-        </DropdownMenuItem>
-      </DropdownMenuGroup>
-
-      <DropdownMenuSeparator class="bg-neutral-700" />
-
-      <DropdownMenuLabel class="text-xs text-neutral-400">
-        Wind Speed
-      </DropdownMenuLabel>
-      <DropdownMenuGroup>
-        <DropdownMenuItem
-          @click="toggleSpeed"
-          class="flex cursor-pointer items-center justify-between focus:bg-neutral-800"
-        >
-          <span>km/h</span>
-          <img
-            v-if="speedUnit === 'kmh'"
-            src="/images/icon-checkmark.svg"
-            alt="Selected"
-            width="12"
-            height="12"
-          />
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          @click="toggleSpeed"
-          class="flex cursor-pointer items-center justify-between focus:bg-neutral-800"
-        >
-          <span>mph</span>
-          <img
-            v-if="speedUnit === 'mph'"
-            src="/images/icon-checkmark.svg"
-            alt="Selected"
-            width="12"
-            height="12"
-          />
-        </DropdownMenuItem>
-      </DropdownMenuGroup>
-
-      <DropdownMenuSeparator class="bg-neutral-700" />
-
-      <DropdownMenuLabel class="text-xs text-neutral-400">
-        Precipitation
-      </DropdownMenuLabel>
-      <DropdownMenuGroup>
-        <DropdownMenuItem
-          @click="togglePrecip"
-          class="flex cursor-pointer items-center justify-between focus:bg-neutral-800"
-        >
-          <span>Millimeters (mm)</span>
-          <img
-            v-if="precipUnit === 'mm'"
-            src="/images/icon-checkmark.svg"
-            alt="Selected"
-            width="12"
-            height="12"
-          />
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          @click="togglePrecip"
-          class="flex cursor-pointer items-center justify-between focus:bg-neutral-800"
-        >
-          <span>Inches (in)</span>
-          <img
-            v-if="precipUnit === 'in'"
-            src="/images/icon-checkmark.svg"
-            alt="Selected"
-            width="12"
-            height="12"
-          />
-        </DropdownMenuItem>
-      </DropdownMenuGroup>
+      <UnitGroup
+        v-for="(unitGroup, i) in unitGroups"
+        :key="unitGroup.label"
+        @click="unitGroup.click"
+        v-bind="unitGroup"
+      >
+        <DropdownMenuSeparator
+          v-if="i != unitGroups.length - 1"
+          class="bg-neutral-600"
+        />
+      </UnitGroup>
     </DropdownMenuContent>
   </DropdownMenu>
 </template>

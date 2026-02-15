@@ -14,7 +14,7 @@ const WEATHER_ICONS = {
   RAIN: `${ICONS_PATH}icon-rain.webp`,
   SNOW: `${ICONS_PATH}icon-snow.webp`,
   STORM: `${ICONS_PATH}icon-storm.webp`,
-};
+} as const;
 
 const WEATHER_GROUPS = [
   {

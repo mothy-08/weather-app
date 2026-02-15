@@ -1,7 +1,5 @@
-// composables/useUnits.ts
 import { ref, computed } from "vue";
 
-// Global state (singleton)
 const tempUnit = ref<"c" | "f">("c");
 const speedUnit = ref<"kmh" | "mph">("kmh");
 const precipUnit = ref<"mm" | "in">("mm");
