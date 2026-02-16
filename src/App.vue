@@ -2,7 +2,7 @@
 import UnitsDropdown from "./components/UnitsDropdown.vue";
 import SearchBar from "./components/SearchBar.vue";
 import CurrentWeatherCard from "./components/CurrentWeatherCard.vue";
-import { useWeather } from "./useWeather";
+import { useWeather } from "./composables/useWeather";
 import { computed, ref, watchEffect } from "vue";
 import WeatherHighlightCard from "./components/WeatherHighlightCard.vue";
 import DailyForecastItem from "./components/DailyForecastItem.vue";
@@ -75,8 +75,8 @@ function handleLocationSelect(payload: {
 </script>
 
 <template>
-  <div class="mx-auto flex max-w-4/5 flex-col gap-16 py-6">
-    <header class="flex justify-between">
+  <div class="mx-auto flex max-w-[90%] flex-col gap-16 py-6 md:max-w-4/5">
+    <header class="flex items-center justify-between">
       <a @click.prevent href="/">
         <img
           src="/images/logo.svg"
@@ -88,8 +88,10 @@ function handleLocationSelect(payload: {
       <UnitsDropdown />
     </header>
 
-    <main class="flex flex-col items-center justify-center gap-8">
-      <h1 class="font-grotesque text-5xl">How's the sky looking today?</h1>
+    <main class="flex flex-col gap-8">
+      <h1 class="font-grotesque text-center text-6xl md:text-5xl">
+        How's the sky looking today?
+      </h1>
 
       <SearchBar @select-location="handleLocationSelect" />
 
@@ -101,18 +103,18 @@ function handleLocationSelect(payload: {
         v-else-if="isLoading || !data || !overview || !highlight"
       />
 
-      <section v-else class="grid grid-cols-3 gap-4">
+      <section v-else class="flex flex-col gap-4 md:grid md:grid-cols-3">
         <CurrentWeatherCard v-bind="overview" />
 
         <section class="col-span-2 my-auto">
-          <ul class="flex gap-4">
+          <ul class="grid grid-cols-2 gap-4 md:flex">
             <WeatherHighlightCard v-bind="highlight" />
           </ul>
         </section>
 
-        <section class="col-span-2 flex flex-col justify-between">
-          <h2>Daily Forecast</h2>
-          <ul class="flex gap-4 overflow-x-auto">
+        <section class="col-span-2 flex flex-col justify-between gap-3">
+          <h2 class="font-semibold">Daily Forecast</h2>
+          <ul class="grid grid-cols-3 gap-4 overflow-x-auto md:flex">
             <DailyForecastItem
               v-for="daily in dailies"
               :key="daily.date"
@@ -121,8 +123,9 @@ function handleLocationSelect(payload: {
           </ul>
         </section>
 
+        <!-- this section is my problem -->
         <section
-          class="col-start-3 row-start-1 row-end-4 flex flex-col gap-4 rounded-xl bg-neutral-800 px-4 py-6"
+          class="flex flex-col gap-4 rounded-xl bg-neutral-800 p-4 md:col-start-3 md:row-start-1 md:row-end-4"
         >
           <div class="flex items-center justify-between">
             <h2 class="font-bold">Hourly Forecast</h2>
@@ -130,7 +133,7 @@ function handleLocationSelect(payload: {
             <DaysDropdown :items="dailies" v-model="selectedDate" />
           </div>
 
-          <ul class="flex h-150 flex-col gap-3 overflow-y-auto pr-2">
+          <ul class="flex max-h-132 flex-col gap-3 overflow-y-auto">
             <HourlyForecastItem
               v-for="hourly in filteredHourlies"
               :key="hourly.date"

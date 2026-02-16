@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Button from "./ui/button/Button.vue"; // Ensure this path matches your project structure
-import type { DailyForecast } from "@/types";
+import type { DailyForecast } from "@/lib/types";
 import { computed } from "vue";
 
 const props = defineProps<{

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { HourlyForecast } from "@/types";
+import type { HourlyForecast } from "@/lib/types";
 import { computed } from "vue";
 import { useUnits } from "@/composables/useUnits";
 import { celsiusToFahrenheit } from "@/lib/converters";

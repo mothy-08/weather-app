@@ -1,4 +1,4 @@
-import type { IconMeta } from "./types";
+import type { IconMeta } from "./lib/types";
 
 const API_URL = "https://api.open-meteo.com/v1/forecast";
 const LOCALE = "en-US";

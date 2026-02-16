@@ -1,19 +1,19 @@
-import { LOCALE, WEATHER_CODE_MAP } from "@/constants";
+import { WEATHER_CODE_MAP } from "@/lib/constants";
 import type { ClassValue } from "clsx";
-import type { IconMeta } from "@/types";
+import type { IconMeta } from "@/lib/types";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-const hour12Formatter = new Intl.DateTimeFormat(LOCALE, {
+const hour12Formatter = new Intl.DateTimeFormat("en-US", {
   hour: "numeric",
   hour12: true,
 });
 
-const shortWeekdayFormatter = new Intl.DateTimeFormat(LOCALE, {
+const shortWeekdayFormatter = new Intl.DateTimeFormat("en-US", {
   weekday: "short",
 });
 
-const longWeekdayWithDateFormatter = new Intl.DateTimeFormat(LOCALE, {
+const longWeekdayWithDateFormatter = new Intl.DateTimeFormat("en-US", {
   weekday: "long",
   month: "short",
   day: "numeric",

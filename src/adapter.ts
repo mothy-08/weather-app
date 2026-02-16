@@ -14,7 +14,7 @@ import type {
   HourlyForecast,
   HourlyWeather,
   Nowcast,
-} from "./types";
+} from "./lib/types";
 
 export function adaptDailyForecasts(daily: DailyWeather): DailyForecast[] {
   const { dates, tempsMax, tempsMin, weatherCodes } = daily;

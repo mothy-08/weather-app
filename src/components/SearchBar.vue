@@ -100,9 +100,12 @@ function handleKeydown(e: KeyboardEvent) {
 </script>
 
 <template>
-  <form @submit.prevent="searchCity" class="flex items-center gap-3">
+  <form
+    @submit.prevent="searchCity"
+    class="flex flex-col items-center justify-center gap-3 md:flex-row"
+  >
     <search
-      class="focus-within:outline-ring relative flex w-96 items-center gap-3 rounded-lg bg-neutral-800 pl-4 outline"
+      class="md:focus-within:outline-ring relative flex w-full items-center gap-3 rounded-lg bg-neutral-800 pl-4 outline md:w-96"
     >
       <img
         src="/images/icon-search.svg"
@@ -139,8 +142,11 @@ function handleKeydown(e: KeyboardEvent) {
       </ul>
     </search>
 
-    <Button type="submit" class="cursor-pointer bg-blue-500 hover:bg-blue-700"
-      >Search</Button
+    <Button
+      type="submit"
+      class="w-full cursor-pointer bg-blue-500 hover:bg-blue-700 md:w-fit"
     >
+      Search
+    </Button>
   </form>
 </template>
