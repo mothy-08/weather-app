@@ -18,7 +18,7 @@ const displayLow = computed(() =>
 
 <template>
   <li
-    class="flex min-w-24 flex-col items-center justify-center gap-2 rounded-lg border border-neutral-700 bg-neutral-800 px-2 py-3"
+    class="flex flex-1 flex-col items-center justify-center gap-2 rounded-lg border border-neutral-700 bg-neutral-800 px-2 py-3"
   >
     <time :datetime="date">{{ weekdayShort }}</time>
     <img :src="icon.src" :alt="icon.alt" width="64" height="64" />

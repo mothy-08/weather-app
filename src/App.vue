@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import WeatherLogo from "@/assets/icons/logo.svg";
 import UnitsDropdown from "./components/UnitsDropdown.vue";
 import SearchBar from "./components/SearchBar.vue";
 import CurrentWeatherCard from "./components/CurrentWeatherCard.vue";
@@ -9,6 +10,7 @@ import DailyForecastItem from "./components/DailyForecastItem.vue";
 import HourlyForecastItem from "./components/HourlyForecastItem.vue";
 import DaysDropdown from "./components/DaysDropdown.vue"; // Ensure this component emits 'select'
 import WeatherSkeleton from "./components/WeatherSkeleton.vue";
+import SomethingWentWrong from "./components/SomethingWentWrong.vue";
 
 const currentLoc = ref({
   coordinates: {
@@ -21,7 +23,7 @@ const currentLoc = ref({
   },
 });
 
-const { data, isLoading, error } = useWeather(currentLoc);
+const { data, isLoading, error, refetch } = useWeather(currentLoc);
 
 // Reactive State for filtering
 const selectedDate = ref<string>("");
@@ -78,30 +80,21 @@ function handleLocationSelect(payload: {
   <div class="mx-auto flex max-w-[90%] flex-col gap-16 py-6 md:max-w-4/5">
     <header class="flex items-center justify-between">
       <a @click.prevent href="/">
-        <img
-          src="/images/logo.svg"
-          alt="Weather app logo"
-          width="192"
-          height="108"
-        />
+        <WeatherLogo />
       </a>
       <UnitsDropdown />
     </header>
 
-    <main class="flex flex-col gap-8">
+    <SomethingWentWrong v-if="error" @retry="refetch" />
+
+    <main v-else class="flex flex-col gap-8">
       <h1 class="font-grotesque text-center text-6xl md:text-5xl">
         How's the sky looking today?
       </h1>
 
       <SearchBar @select-location="handleLocationSelect" />
 
-      <p v-if="error" class="text-red-500">
-        {{ error }}
-      </p>
-
-      <WeatherSkeleton
-        v-else-if="isLoading || !data || !overview || !highlight"
-      />
+      <WeatherSkeleton v-if="isLoading || !data || !overview || !highlight" />
 
       <section v-else class="flex flex-col gap-4 md:grid md:grid-cols-3">
         <CurrentWeatherCard v-bind="overview" />
@@ -114,7 +107,7 @@ function handleLocationSelect(payload: {
 
         <section class="col-span-2 flex flex-col justify-between gap-3">
           <h2 class="font-semibold">Daily Forecast</h2>
-          <ul class="grid grid-cols-3 gap-4 overflow-x-auto md:flex">
+          <ul class="grid grid-cols-3 gap-4 md:flex">
             <DailyForecastItem
               v-for="daily in dailies"
               :key="daily.date"
@@ -123,7 +116,6 @@ function handleLocationSelect(payload: {
           </ul>
         </section>
 
-        <!-- this section is my problem -->
         <section
           class="flex flex-col gap-4 rounded-xl bg-neutral-800 p-4 md:col-start-3 md:row-start-1 md:row-end-4"
         >

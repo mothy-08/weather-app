@@ -10,6 +10,8 @@ import {
 import { useUnits } from "@/composables/useUnits";
 import { computed } from "vue";
 import UnitGroup from "./UnitGroup.vue";
+import ChevronDown from "@/assets/icons/icon-dropdown.svg";
+import UnitsIcon from "@/assets/icons/icon-units.svg";
 
 const {
   tempUnit,
@@ -35,9 +37,9 @@ const unitGroups = computed(() => {
   return [
     {
       label: "Temperature",
-      metricDesc: "Celsius °C",
+      metricDesc: "Celsius (°C)",
       metricActive: tempUnit.value === "c",
-      imperialDesc: "Fahrenheit °F",
+      imperialDesc: "Fahrenheit (°F)",
       imperialActive: tempUnit.value === "f",
       click: toggleTemp,
     },
@@ -51,9 +53,9 @@ const unitGroups = computed(() => {
     },
     {
       label: "Precipitation",
-      metricDesc: "mm",
+      metricDesc: "Millimeters (mm)",
       metricActive: precipUnit.value === "mm",
-      imperialDesc: "mph",
+      imperialDesc: "Inches (in)",
       imperialActive: precipUnit.value === "in",
       click: togglePrecip,
     },
@@ -67,19 +69,9 @@ const unitGroups = computed(() => {
       <Button
         class="flex cursor-pointer items-center gap-2 bg-neutral-600 text-sm hover:bg-neutral-600"
       >
-        <img
-          src="/images/icon-units.svg"
-          alt="Settings icon"
-          width="16"
-          height="16"
-        />
+        <UnitsIcon />
         Units
-        <img
-          src="/images/icon-dropdown.svg"
-          alt="Chevron down icon"
-          width="12"
-          height="12"
-        />
+        <ChevronDown />
       </Button>
     </DropdownMenuTrigger>
 

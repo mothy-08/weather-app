@@ -152,5 +152,6 @@ export function useWeather(
     data,
     error,
     isLoading,
+    refetch: fetchWeather,
   };
 }

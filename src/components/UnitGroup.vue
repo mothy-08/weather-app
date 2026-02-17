@@ -11,6 +11,7 @@ defineProps<{
   imperialDesc: string;
   imperialActive: boolean;
 }>();
+import Checkmark from "@/assets/icons/icon-checkmark.svg";
 
 const emit = defineEmits<{
   click: [];
@@ -22,33 +23,23 @@ const emit = defineEmits<{
     {{ label }}
   </DropdownMenuLabel>
 
-  <DropdownMenuGroup>
+  <DropdownMenuGroup class="space-y-1">
     <DropdownMenuItem
       @click="emit('click')"
+      :class="{ 'bg-neutral-600': metricActive }"
       class="focus:text-neutral-0 flex cursor-pointer items-center justify-between focus:bg-neutral-600"
     >
       <span>{{ metricDesc }}</span>
-      <img
-        v-if="metricActive"
-        src="/images/icon-checkmark.svg"
-        alt="Selected"
-        width="12"
-        height="12"
-      />
+      <Checkmark v-if="metricActive" />
     </DropdownMenuItem>
 
     <DropdownMenuItem
       @click="emit('click')"
+      :class="{ 'bg-neutral-600': imperialActive }"
       class="focus:text-neutral-0 flex cursor-pointer items-center justify-between focus:bg-neutral-600"
     >
       <span>{{ imperialDesc }}</span>
-      <img
-        v-if="imperialActive"
-        src="/images/icon-checkmark.svg"
-        alt="Selected"
-        width="12"
-        height="12"
-      />
+      <Checkmark v-if="imperialActive" />
     </DropdownMenuItem>
   </DropdownMenuGroup>
 

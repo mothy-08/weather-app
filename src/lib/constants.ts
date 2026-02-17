@@ -1,58 +1,55 @@
-import type { IconMeta } from "./types";
+import type { IconMeta } from "@/lib/types";
+import iconSunny from "@/assets/icons/icon-sunny.webp";
+import iconPartlyCloudy from "@/assets/icons/icon-partly-cloudy.webp";
+import iconOvercast from "@/assets/icons/icon-overcast.webp";
+import iconFog from "@/assets/icons/icon-fog.webp";
+import iconDrizzle from "@/assets/icons/icon-drizzle.webp";
+import iconRain from "@/assets/icons/icon-rain.webp";
+import iconSnow from "@/assets/icons/icon-snow.webp";
+import iconStorm from "@/assets/icons/icon-storm.webp";
 
 const API_URL = "https://api.open-meteo.com/v1/forecast";
-const ICONS_PATH = "/images/";
-
-const WEATHER_ICONS = {
-  SUNNY: `${ICONS_PATH}icon-sunny.webp`,
-  PARTLY_CLOUDY: `${ICONS_PATH}icon-partly-cloudy.webp`,
-  OVERCAST: `${ICONS_PATH}icon-overcast.webp`,
-  FOG: `${ICONS_PATH}icon-fog.webp`,
-  DRIZZLE: `${ICONS_PATH}icon-drizzle.webp`,
-  RAIN: `${ICONS_PATH}icon-rain.webp`,
-  SNOW: `${ICONS_PATH}icon-snow.webp`,
-  STORM: `${ICONS_PATH}icon-storm.webp`,
-} as const;
+const LOCALE = "en-US";
 
 const WEATHER_GROUPS = [
   {
     codes: [0, 1],
-    src: WEATHER_ICONS.SUNNY,
+    src: iconSunny,
     alt: "Sunny weather",
   },
   {
     codes: [2],
-    src: WEATHER_ICONS.PARTLY_CLOUDY,
+    src: iconPartlyCloudy,
     alt: "Partly cloudy weather",
   },
   {
     codes: [3],
-    src: WEATHER_ICONS.OVERCAST,
+    src: iconOvercast,
     alt: "Overcast sky",
   },
   {
     codes: [45, 48],
-    src: WEATHER_ICONS.FOG,
+    src: iconFog,
     alt: "Foggy conditions",
   },
   {
     codes: [51, 53, 55, 56, 57],
-    src: WEATHER_ICONS.DRIZZLE,
+    src: iconDrizzle,
     alt: "Light drizzle",
   },
   {
     codes: [61, 63, 65, 66, 67, 80, 81, 82],
-    src: WEATHER_ICONS.RAIN,
+    src: iconRain,
     alt: "Rainy weather",
   },
   {
     codes: [71, 73, 75, 77, 85, 86],
-    src: WEATHER_ICONS.SNOW,
+    src: iconSnow,
     alt: "Snowy weather",
   },
   {
     codes: [95, 96, 99],
-    src: WEATHER_ICONS.STORM,
+    src: iconStorm,
     alt: "Thunderstorm conditions",
   },
 ] as const;
@@ -63,4 +60,4 @@ const WEATHER_CODE_MAP: ReadonlyMap<number, IconMeta> = new Map(
   ),
 );
 
-export { API_URL, WEATHER_CODE_MAP };
+export { API_URL, LOCALE, WEATHER_CODE_MAP };

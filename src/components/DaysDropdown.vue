@@ -8,6 +8,8 @@ import {
 import Button from "./ui/button/Button.vue"; // Ensure this path matches your project structure
 import type { DailyForecast } from "@/lib/types";
 import { computed } from "vue";
+import Checkmark from "@/assets/icons/icon-checkmark.svg";
+import ChevronDown from "@/assets/icons/icon-dropdown.svg";
 
 const props = defineProps<{
   items: DailyForecast[]; // Pass the actual API data here
@@ -38,12 +40,8 @@ const selectedLabel = computed(() => {
         class="flex cursor-pointer items-center gap-2 bg-neutral-600 text-sm hover:bg-neutral-600"
       >
         {{ selectedLabel }}
-        <img
-          src="/images/icon-dropdown.svg"
-          alt="Chevron down icon"
-          width="12"
-          height="12"
-        />
+
+        <ChevronDown />
       </Button>
     </DropdownMenuTrigger>
 
@@ -60,13 +58,7 @@ const selectedLabel = computed(() => {
       >
         <span>{{ getWeekdayName(item.date) }}</span>
 
-        <img
-          v-if="item.date === modelValue"
-          src="/images/icon-checkmark.svg"
-          alt="Selected"
-          width="12"
-          height="12"
-        />
+        <Checkmark v-if="item.date === modelValue" />
       </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
