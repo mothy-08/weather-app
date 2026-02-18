@@ -117,15 +117,17 @@ function handleLocationSelect(payload: {
         </section>
 
         <section
-          class="flex flex-col gap-4 rounded-xl bg-neutral-800 p-4 md:col-start-3 md:row-start-1 md:row-end-4"
+          class="flex flex-col gap-4 rounded-xl bg-neutral-800 py-4 pl-4 md:col-start-3 md:row-start-1 md:row-end-4"
         >
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between pr-4">
             <h2 class="font-bold">Hourly Forecast</h2>
 
             <DaysDropdown :items="dailies" v-model="selectedDate" />
           </div>
 
-          <ul class="flex max-h-132 flex-col gap-3 overflow-y-auto">
+          <ul
+            class="scrollbar-thin flex max-h-136 flex-col gap-3 overflow-y-auto pr-2"
+          >
             <HourlyForecastItem
               v-for="hourly in filteredHourlies"
               :key="hourly.date"
@@ -143,3 +145,11 @@ function handleLocationSelect(payload: {
     </main>
   </div>
 </template>
+
+<style scoped>
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neutral-700) var(--color-neutral-800);
+  scrollbar-gutter: stable;
+}
+</style>

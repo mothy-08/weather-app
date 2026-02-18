@@ -169,6 +169,7 @@ function handleKeydown(e: KeyboardEvent) {
         class="border-none accent-amber-200 focus-visible:ring-0"
         placeholder="Search for a place..."
         v-model.trim="city"
+        autocomplete="off"
         @keydown="handleKeydown"
       />
 
