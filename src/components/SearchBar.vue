@@ -18,7 +18,6 @@ const results = ref<GeoResult[]>([]);
 const selectedIndex = ref(-1);
 const isLoading = ref(false);
 
-// 1. Flag to prevent the watcher from firing when WE update the input (Selection)
 let isSelectionUpdate = false;
 let debounceTimer: ReturnType<typeof setTimeout>;
 
@@ -35,13 +34,11 @@ const emit = defineEmits<{
 }>();
 
 watch(city, (newVal) => {
-  // 2. If this change came from clicking a result, ignore it.
   if (isSelectionUpdate) {
     isSelectionUpdate = false;
     return;
   }
 
-  // Clear any pending search from the previous keystroke
   clearTimeout(debounceTimer);
 
   if (!newVal) {
@@ -50,7 +47,6 @@ watch(city, (newVal) => {
     return;
   }
 
-  // 3. Restart the debounce timer
   debounceTimer = setTimeout(() => {
     performSearch();
   }, 500);
@@ -60,9 +56,7 @@ watch(results, () => {
   selectedIndex.value = -1;
 });
 
-// 4. The "Router": Decides if we select an item or search the API
 function handleEnter() {
-  // CRITICAL: Stop the debounce timer so we don't search twice
   clearTimeout(debounceTimer);
 
   if (!city.value) return;
@@ -72,18 +66,14 @@ function handleEnter() {
   if (selectedItem) {
     selectResult(selectedItem);
   } else {
-    // No item highlighted? Force an immediate search
     performSearch();
   }
 }
 
-// 5. The "Fetcher": Purely handles the API (No selection logic)
 async function performSearch() {
   const currentQuery = city.value;
   isLoading.value = true;
 
-  // UX Choice: You can keep old results while loading (stale-while-revalidate)
-  // or clear them. Clearing them avoids confusing "London" results while typing "Paris".
   results.value = [];
 
   const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
@@ -94,7 +84,6 @@ async function performSearch() {
     const res = await fetch(url);
     const data = await res.json();
 
-    // Race Condition Check: Only update if the user hasn't typed something else
     if (city.value === currentQuery) {
       results.value = data.results || [];
     }
@@ -109,7 +98,6 @@ async function performSearch() {
 }
 
 function selectResult(result: GeoResult) {
-  // 6. Set the flag BEFORE updating the value to pause the watcher
   isSelectionUpdate = true;
 
   city.value = result.name;

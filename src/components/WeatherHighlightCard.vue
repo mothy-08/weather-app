@@ -8,7 +8,6 @@ const props = defineProps<WeatherHighlight>();
 const { tempUnit, speedUnit, precipUnit } = useUnits();
 
 const highlights = computed(() => {
-  // 1. Convert Values
   const feelsLikeVal =
     tempUnit.value === "c"
       ? props.feelsLike
@@ -22,7 +21,6 @@ const highlights = computed(() => {
       ? props.precipitation
       : mmToInches(props.precipitation);
 
-  // 2. Set Labels
   const wUnit = speedUnit.value === "kmh" ? " km/h" : " mph";
   const pUnit = precipUnit.value === "mm" ? " mm" : " in";
 
@@ -55,7 +53,7 @@ const highlights = computed(() => {
   <li
     v-for="highlight in highlights"
     :key="highlight.label"
-    class="flex flex-1 flex-col gap-3 rounded-xl border border-neutral-700 bg-neutral-800 p-4"
+    class="flex flex-1 flex-col justify-between gap-3 rounded-xl border border-neutral-700 bg-neutral-800 p-4"
   >
     <h3 class="text-lg font-medium text-neutral-200">{{ highlight.label }}</h3>
     <data :value="highlight.value" class="text-neutral-0 text-3xl font-light">

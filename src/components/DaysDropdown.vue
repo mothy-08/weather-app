@@ -5,28 +5,26 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Button from "./ui/button/Button.vue"; // Ensure this path matches your project structure
+import Button from "./ui/button/Button.vue";
 import type { DailyForecast } from "@/lib/types";
 import { computed } from "vue";
 import Checkmark from "@/assets/icons/icon-checkmark.svg";
 import ChevronDown from "@/assets/icons/icon-dropdown.svg";
 
 const props = defineProps<{
-  items: DailyForecast[]; // Pass the actual API data here
-  modelValue: string; // The currently selected date string (e.g., "2023-10-25")
+  items: DailyForecast[];
+  modelValue: string;
 }>();
 
 const emit = defineEmits<{
   (e: "update:modelValue", value: string): void;
 }>();
 
-// Helper to display full weekday name (e.g., "Monday") from the ISO date
 function getWeekdayName(dateStr: string): string {
   if (!dateStr) return "";
   return new Date(dateStr).toLocaleDateString("en-US", { weekday: "long" });
 }
 
-// Compute the label for the trigger button
 const selectedLabel = computed(() => {
   const found = props.items.find((i) => i.date === props.modelValue);
   return found ? getWeekdayName(found.date) : "Select Day";

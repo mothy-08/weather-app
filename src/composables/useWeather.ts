@@ -16,7 +16,6 @@ interface WeatherVariableProvider {
   } | null;
 }
 
-// Helper to generate date ranges (DRY principle)
 function generateTimeRange(
   start: number,
   end: number,
@@ -29,12 +28,10 @@ function generateTimeRange(
   );
 }
 
-// Helper to safely extract scalar values (e.g., current temp)
 function getVal(provider: WeatherVariableProvider, index: number): number {
   return provider.variables(index)?.value() ?? 0;
 }
 
-// Helper to safely extract array values (e.g., hourly temps)
 function getArr(
   provider: WeatherVariableProvider,
   index: number,
@@ -42,28 +39,25 @@ function getArr(
   return provider.variables(index)?.valuesArray() ?? null;
 }
 
-// Define params configuration outside to ensure index matching stability
 const PARAMS_CONFIG = {
   daily: ["temperature_2m_max", "temperature_2m_min", "weather_code"],
   hourly: ["temperature_2m", "weather_code"],
   current: [
-    "temperature_2m", // 0
-    "relative_humidity_2m", // 1
-    "apparent_temperature", // 2
-    "precipitation", // 3
-    "wind_speed_10m", // 4
-    "weather_code", // 5
+    "temperature_2m",
+    "relative_humidity_2m",
+    "apparent_temperature",
+    "precipitation",
+    "wind_speed_10m",
+    "weather_code",
   ],
 };
 
 export function useWeather(
-  // Accept a getter or a Ref for maximum flexibility
   params: Ref<{
     coordinates: { latitude: number; longitude: number };
     location: { city: string; country: string };
   }>,
 ) {
-  // Use shallowRef for performance. We replace the whole object, we don't mutate deep props.
   const data = shallowRef<AdaptedWeatherData | null>(null);
   const error = ref<string | null>(null);
   const isLoading = ref(false);
@@ -86,12 +80,10 @@ export function useWeather(
       const response = responses[0];
       if (!response) throw new Error("Weather API returned empty response");
 
-      // Use non-null assertions (!) only because we trust the SDK structure matches our PARAMS_CONFIG
       const current = response.current()!;
       const hourly = response.hourly()!;
       const daily = response.daily()!;
 
-      // 1. Map Raw SDK Data to Domain Type
       const weatherData: WeatherData = {
         current: {
           date: new Date(Number(current.time()) * 1000),
@@ -123,7 +115,6 @@ export function useWeather(
         },
       };
 
-      // 2. Adapt to View Model
       data.value = {
         overview: adaptCurrentWeather({
           current: weatherData.current,
