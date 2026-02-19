@@ -147,7 +147,7 @@ function handleKeydown(e: KeyboardEvent) {
     class="flex flex-col items-center justify-center gap-3 md:flex-row"
   >
     <search
-      class="md:focus-within:outline-ring relative flex w-full items-center gap-3 rounded-lg bg-neutral-800 pl-4 outline md:w-96"
+      class="md:focus-within:outline-ring relative flex w-full items-center gap-3 rounded-lg bg-neutral-800 pl-4 outline outline-transparent md:w-96"
     >
       <SearchIcon />
       <Input

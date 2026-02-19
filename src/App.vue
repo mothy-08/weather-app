@@ -124,7 +124,7 @@ function handleLocationSelect(payload: {
             </div>
 
             <ul
-              class="scrollbar-thin flex flex-1 flex-col gap-3 overflow-y-auto pr-2"
+              class="scrollbar-thin flex flex-1 flex-col gap-3 overflow-y-scroll pr-2"
             >
               <HourlyForecastItem
                 v-for="hourly in filteredHourlies"
