@@ -116,7 +116,7 @@ function handleLocationSelect(payload: {
 
         <section class="relative">
           <div
-            class="flex flex-col gap-4 rounded-xl bg-neutral-800 py-4 pl-4 md:absolute md:inset-0 md:h-full"
+            class="flex max-h-120 flex-col gap-4 rounded-xl bg-neutral-800 py-4 pl-4 md:absolute md:inset-0 md:h-full md:max-h-full"
           >
             <div class="flex shrink-0 items-center justify-between pr-4">
               <h2 class="font-bold">Hourly Forecast</h2>
@@ -124,7 +124,7 @@ function handleLocationSelect(payload: {
             </div>
 
             <ul
-              class="scrollbar-thin flex flex-1 flex-col gap-3 overflow-y-scroll pr-2"
+              class="scrollbar-thin flex flex-1 flex-col gap-3 overflow-y-scroll pr-4"
             >
               <HourlyForecastItem
                 v-for="hourly in filteredHourlies"
