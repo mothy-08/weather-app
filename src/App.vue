@@ -116,16 +116,14 @@ function handleLocationSelect(payload: {
 
         <section class="relative">
           <div
-            class="flex max-h-120 flex-col gap-4 rounded-xl bg-neutral-800 py-4 pl-4 md:absolute md:inset-0 md:h-full md:max-h-full"
+            class="flex max-h-120 flex-col gap-4 rounded-xl bg-neutral-800 py-4 pb-4 pl-4 md:absolute md:inset-0 md:h-full md:max-h-full"
           >
             <div class="flex shrink-0 items-center justify-between pr-4">
               <h2 class="font-bold">Hourly Forecast</h2>
               <DaysDropdown :items="dailies" v-model="selectedDate" />
             </div>
 
-            <ul
-              class="scrollbar-thin flex flex-1 flex-col gap-3 overflow-y-scroll pr-4"
-            >
+            <ul class="scrollbar-thin flex flex-1 flex-col gap-3 pr-4">
               <HourlyForecastItem
                 v-for="hourly in filteredHourlies"
                 :key="hourly.date"
@@ -151,6 +149,7 @@ function handleLocationSelect(payload: {
   scrollbar-width: thin;
   scrollbar-color: var(--color-neutral-700) var(--color-neutral-800);
   scrollbar-gutter: stable;
+  overflow-y: scroll;
 }
 
 .scrollbar-thin::-webkit-scrollbar {
