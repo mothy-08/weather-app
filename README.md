@@ -3,12 +3,12 @@
 A weather web app written in Vue.js as a solution to the [Weather app challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/weather-app-K1FhddVm49).
 
 ## Preview
-![Preview of the Weather App](./preview.png)
+![Preview of the Weather App](./public/preview.png)
 
 ## Features
 
 - Search for weather information by entering a location in the search bar
-- View current weather conditions including temperature, weather icon, and location details
+- View current weather conditions, including temperature, weather icon, and location details
 - See additional weather metrics like "feels like" temperature, humidity percentage, wind speed, and precipitation amounts
 - Browse a 7-day weather forecast with daily high/low temperatures and weather icons
 - View an hourly forecast showing temperature changes throughout the day
@@ -20,11 +20,12 @@ A weather web app written in Vue.js as a solution to the [Weather app challenge 
 
 ## Built with
 
-- Vue.js 3
-- TailwindCSS 4
+- Vue.js
+- Typescript
+- TailwindCSS
 - Open-Meteo API
 
 ## Links
 
-- Solution URL: [Add solution URL here](https://your-solution-url.com)
-- Live Site URL: [Add live site URL here](https://your-live-site-url.com)
+- Solution URL: [GitHub](https://github.com/mothy-08/weather-app)
+- Live Site URL: [Weather App](https://mothy-08.github.io/weather-app/)
