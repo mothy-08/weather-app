@@ -27,5 +27,5 @@ A weather web app written in Vue.js as a solution to the [Weather app challenge 
 
 ## Links
 
-- Solution URL: [GitHub](https://github.com/mothy-08/weather-app)
-- Live Site URL: [Weather App](https://mothy-08.github.io/weather-app/)
+- [Solution](https://github.com/mothy-08/weather-app)
+- [Live Site](https://mothy-08.github.io/weather-app/)
